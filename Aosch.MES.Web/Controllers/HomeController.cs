@@ -1,4 +1,5 @@
 ﻿using Aosch.MES.Service;
+using log4net;
 using System.Web.Mvc;
 
 namespace Aosch.MES.Web.Controllers
@@ -6,6 +7,8 @@ namespace Aosch.MES.Web.Controllers
     [LoginFilterAcctribute]
     public class HomeController : Controller
     {
+
+        ILog logger = LogManager.GetLogger("errorMsg");
         public ActionResult Index()
         {
             var accounts= new AccountService().LoadEntities(a => a.ID > 0);

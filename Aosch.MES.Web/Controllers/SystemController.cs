@@ -1,6 +1,7 @@
 ﻿using Aosch.MES.Common;
 using Aosch.MES.Model;
 using Aosch.MES.Service;
+using log4net;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,6 +10,7 @@ namespace Aosch.MES.Web.Controllers
 {
     public class SystemController : Controller
     {
+        ILog logger = LogManager.GetLogger("SystemController");
         public RoleService roleService = new RoleService();
         // GET: System
         public ActionResult Index()
@@ -73,7 +75,8 @@ namespace Aosch.MES.Web.Controllers
                 var role = roleService.LoadEntities(a => a.ID == ID).FirstOrDefault();
                if (roleService.DeleteEntity(role))
                 {
-                    LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Warning, $"用户 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
+                    //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Warning, $"用户 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
+                    logger.Info($"用户 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
                     return Json(new { Status = "OK" });
                 }
             }

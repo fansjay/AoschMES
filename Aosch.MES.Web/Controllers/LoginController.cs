@@ -1,6 +1,7 @@
 ﻿using Aosch.MES.Common;
 using Aosch.MES.Model;
 using Aosch.MES.Service;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Aosch.MES.Web.Controllers
 {
     public class LoginController : Controller
     {
-       
+        ILog logger = LogManager.GetLogger("LoginController");
         // GET: Login
         public ActionResult Index()
         {
@@ -33,13 +34,14 @@ namespace Aosch.MES.Web.Controllers
             var account = new AccountService().Login(userName, userPwd);
             if (account == null)
             {
-                LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"),LogType.Warning, $"用户名:{userName}的用户登录失败!原因：用户名密码不正确！\n");
+                //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"),LogType.Warning, $"用户名:{userName}的用户登录失败!原因：用户名密码不正确！\n");
+                logger.Error($"用户名:{userName}的用户登录失败!原因：用户名密码不正确!");
                 return Json(new { Status = "FAIL"});
             }
             else
             {
-                LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Info, $"用户名:{userName}的用户登录成功！\n");
-                
+                //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Info, $"用户名:{userName}的用户登录成功！\n");
+                logger.Info($"用户名:{userName}的用户登录成功!");
                 return Json(new {LoginAccount=account,Status="OK"});
             }
             
