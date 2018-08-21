@@ -1,0 +1,242 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>系统首页</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/AdminLTE/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE/Ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE/skins/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body class="hold-transition skin-yellow-light sidebar-mini " style="overflow-y:hidden;">
+    <div class="container-fluid">
+        <div class="wrapper">
+            <header class="main-header">
+                <a href="http://www.aosch.com.cn" target="_blank" class="logo">
+                    <span class="logo-mini"><img src="~/Content/Images/logosmall.png" /></span>
+                    <span class="logo-lg"><img src="~/Content/Images/logo.png" /></span>
+                </a>
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <!--折叠按钮-->
+                    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">导航状态</span>
+                    </a>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown messages-menu">
+
+                            </li>
+                            <li class="dropdown notifications-menu">
+
+                            </li>
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="~/Content/Images/user.jpg" class="user-image" alt="User Image">
+                                    <span id="signuser"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="user-header">
+                                        <img src="~/Content/Images/user.jpg" class="img-circle" alt="User Image">
+                                        <p>
+                                            <span id="realname"></span> <span id="rolename"></span>
+                                            <small>欢迎您!!!</small>
+                                        </p>
+                                    </li>
+                                    <li class="user-body">
+                                        <div class="row">
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#" onclick="userInfo()">个人资料</a>
+                                            </div>
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#" onclick="UpdatePassword()">密码修改</a>
+                                            </div>
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#" onclick="Exit()">退出</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            @*   <a href="javascript:;" onclick="userInfo()" class=" btn btn-default btn-flat">个人信息</a>*@
+                                        </div>
+                                        <div class="pull-right">
+                                            @*<a href="javascript:;" onclick="Exit()" class="btn btn-default btn-flat">安全退出</a>*@
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown messages-menu" id="permessionli">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <i class="fa fa-envelope-o"></i>
+                                    <span class="label label-danger" id="TotalNoReadMessageCount">0</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="header">@ViewBag.Hello</li>
+                                    <li>
+                                        <!-- inner menu: contains the actual data -->
+                                        <ul class="menu" id="messageMenu"></ul>
+                                    </li>
+                                    <li class="footer"><a href="javascript:" onclick="SeeAllMessage()">查看所有信息</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+
+            <aside class="main-sidebar">
+                <section class="sidebar">
+                    <div class="user-panel">
+
+                    </div>
+                    <ul class="sidebar-menu" id="ulFirstLevel" data-widget="tree">
+                        <!--加载动态菜单导航选项中心-->
+                    </ul>
+                </section>
+            </aside>
+
+
+
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+
+                <div id="page-wrapper" class="gray-bg dashbard-1">
+
+                    <div class="row content-tabs">
+                        <button class="roll-nav roll-left J_tabLeft">
+                            <i class="fa fa-backward"></i>
+                        </button>
+                        <nav class="page-tabs J_menuTabs">
+                            <div class="page-tabs-content">
+                                <a href="javascript:;" class="active J_menuTab" data-id="/Home/Home">系统首页</a>
+
+                            </div>
+
+                        </nav>
+                        <button class="roll-nav roll-right J_tabRight">
+                            <i class="fa fa-forward"></i>
+                        </button>
+                        <div class="btn-group roll-nav roll-right">
+                            <button class="dropdown J_tabClose" data-toggle="dropdown">
+                                关闭操作<span class="caret"></span>
+                            </button>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                                <li class="J_tabShowActive">
+                                    <a>定位当前选项卡</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="J_tabCloseAll">
+                                    <a>关闭全部选项卡</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="J_tabCloseOther">
+                                    <a>关闭其他选项卡</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="#" onclick="Exit()" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+                    </div>
+                </div>
+
+                <section class="content container-fluid">
+                    <div class="row J_mainContent" id="content-main">
+                        <iframe class="J_iframe" name="AoschFrame" id="AoschFrame1" onload="changeFrameHeight('AoschFrame1')" scrolling="no" width="100%" height="100%" src="/Home/Home" frameborder="0" data-id="/Home/Home" seamless></iframe>
+
+                    </div>
+                </section>
+                <!-- /.content -->
+            </div>
+
+            <aside class="control-sidebar control-sidebar-dark">
+                <!-- Create the tabs -->
+                <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+                    <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+                    <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <!-- Home tab content -->
+                    <div class="tab-pane active " id="control-sidebar-home-tab">
+                        <h3 class="control-sidebar-heading">最近动作</h3>
+                        <ul class="control-sidebar-menu">
+                            <li>
+                                <a href="javascript:;">
+                                    <div class="menu-info">
+                                        <h4 class="control-sidebar-subheading">系统信息</h4>
+                                        <p>系统运行正常</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <h3 class="control-sidebar-heading">历史记录</h3>
+                        <div id="listss"></div>
+
+                        <h3 class="control-sidebar-heading">任务列表</h3>
+                        <ul class="control-sidebar-menu">
+                            <li>
+                                <a href="javascript:;">
+                                    <h4 class="control-sidebar-subheading">
+                                        功能1完成百分比
+                                        <span class="pull-right-container">
+                                            <span class="label label-danger pull-right">70%</span>
+                                        </span>
+                                    </h4>
+                                    <h4 class="control-sidebar-subheading">
+                                        功能2完成百分比
+                                        <span class="pull-right-container">
+                                            <span class="label label-warning pull-right">20%</span>
+                                        </span>
+                                    </h4>
+                                    <div class="progress progress-xxs">
+                                        <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane" id="control-sidebar-stats-tab">面板设置</div>
+
+                    <div class="tab-pane" id="control-sidebar-settings-tab">
+                        <form method="post">
+                            <h3 class="control-sidebar-heading">主题设置</h3>
+                            <div class="form-group">
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </aside>
+            <div class="control-sidebar-bg"></div>
+        </div>
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/HPlus/jquery.metisMenu.js"></script>
+    <script src="~/Scripts/HPlus/jquery.slimscroll.min.js"></script>
+    <script src="~/Scripts/HPlus/hplus.js"></script>
+    <script src="~/Scripts/HPlus/contabs.js"></script>
+    <script src="~/Scripts/MyNavigation.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script src="~/Scripts/AdminLTE/adminlte.min.js"></script>
+    <script src="~/Scripts/AdminLTE/demo.js"></script>
+    <script>
+        $(function () {
+
+
+        })
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CNC生产自动化</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/AdminLTE/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE/Ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE/skins/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Content/Bootstrap-Table/bootstrap-table.css" rel="stylesheet" />
+
+</head>
+<body style="margin:5px;">
+    <section class="content container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>83<sup style="font-size: 20px">%</sup></h3>
+                        <p>料仓负载率</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="javscript:void(0)" class="small-box-footer">详情 >> <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>56<sup style="font-size: 20px">%</sup></h3>
+                        <p>设备稼动率</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="javscript:void(0)" class="small-box-footer">详情 >> <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>44<sup style="font-size: 20px">%</sup></h3>
+                        <p>任务完成率</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="javscript:void(0)" class="small-box-footer">详情 >> <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>6590</h3>
+                        <p>累计加工完成</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="javscript:void(0)" class="small-box-footer">详情 >> <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <!-- Main row -->
+        <div class="row">
+            <!-- Left col -->
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">系统日志</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+
+                        <div class="row">
+                            <a class="btn btn-app">
+                                <i class="fa fa-edit"></i> 任务清单
+                            </a>
+                            <a class="btn btn-app">
+                                <i class="fa fa-play"></i> 加工记录
+                            </a>
+                            <a class="btn btn-app">
+                                <i class="fa fa-repeat"></i> 实时报表
+                            </a>
+                            <a class="btn btn-app">
+                                <i class="fa fa-pause"></i> 工厂日历
+                            </a>
+                            <a class="btn btn-app">
+                                <i class="fa fa-save"></i> 报警历史
+                            </a>
+                        </div>
+                    </div>
+                    @*日志信息*@
+
+                    <table id="logtable"></table>
+                    
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-7 col-xs-12" style="padding-left:0px;">
+                <div class="box box-danger" id="getHeight">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">实时信息</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body no-padding">
+
+
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <img class="img-responsive" src="~/Content/Images/cnc.png" />
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img class="img-responsive" src="~/Content/Images/cmm.png" />
+                            </div>
+                            <div class="col-md-4">
+                                <img class="img-responsive" src="~/Content/Images/robot.png" />
+                            </div>
+                            <div class="col-md-4">
+                                <img class="img-responsive" src="~/Content/Images/bin2.png" />
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <img class="img-responsive" src="~/Content/Images/warehouse.png" />
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/HPlus/jquery.metisMenu.js"></script>
+    <script src="~/Scripts/HPlus/jquery.slimscroll.min.js"></script>
+    <script src="~/Scripts/HPlus/hplus.js"></script>
+    <script src="~/Scripts/HPlus/contabs.js"></script>
+    <script src="~/Scripts/MyNavigation.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/AdminLTE/adminlte.min.js"></script>
+    <script src="~/Scripts/AdminLTE/demo.js"></script>
+    <script src="~/Scripts/Bootstrap-Table/bootstrap-table.js"></script>
+    <script src="~/Scripts/Bootstrap-Table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+        $(function () {
+           
+            //后台分页:Json格式：{“total”:24,”rows”:[…]}  前台分页：Json格式[{},{}]
+            //console.log($("#rolet").bootstrapTable("getSelections"));
+            $("#logtable").bootstrapTable({
+            //请求方法
+            method: 'post',
+            //是否显示行间隔色
+            striped: false,
+            //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            cache: false,
+            //是否显示分页（*）
+            pagination: true,
+            //是否启用排序
+            sortable: false,
+            //排序方式
+            sortOrder: "asc",
+            //初始化加载第一页，默认第一页
+            //我设置了这一项，但是貌似没起作用，而且我这默认是0,- -
+            //pageNumber:1,
+            //每页的记录行数（*）
+            //pageSize: 10,
+            //可供选择的每页的行数（*）
+            //pageList: [10, 25, 50, 100],
+            //这个接口需要处理bootstrap table传递的固定参数,并返回特定格式的json数据
+            url: "/CNC/GetLogsJson",
+            //默认值为 'limit',传给服务端的参数为：limit, offset, search, sort, order Else
+            //queryParamsType:'',
+            ////查询参数,每次调用是会带上这个参数，可自定义
+            //queryParams: function(params) {
+            //    var subcompany = $('#rolet option:selected').val();
+            //    var name = $('#name').val();
+            //    return {
+            //        pageNumber: params.offset+1,
+            //        pageSize: params.limit,
+            //        companyId:subcompany,
+            //        name:name
+            //    }},
+            //分页方式：client客户端分页，server服务端分页（*）
+           // sidePagination: "server",
+            //pagination: true,
+            //是否显示搜索
+            search: false,
+            //Enable the strict search.
+            strictSearch: true,
+            //Indicate which field is an identity field.
+            idField: "ID",
+            columns: [
+                {field: 'LogTime',title: '时间',align: 'center'},
+                {field: 'Sender',title: '发送者',align: 'center'},
+                {field: 'Message',title: '消息',align: 'center'},
+            ]
+        })
+
+        })
+
+    </script>
+</body>
+</html>

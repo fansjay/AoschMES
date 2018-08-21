@@ -1,0 +1,287 @@
+﻿@model Aosch.MES.Model.Role
+@{
+    ViewBag.Title = "Roles";
+}
+
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/Bootstrap-Table/bootstrap-table.min.css" rel="stylesheet" />
+<link href="~/Content/Bootstrap-Table/Bootstrap-Editable/bootstrap-editable.css" rel="stylesheet" />
+<link href="~/Content/Jquery-Tree2.52/jquery.tree-multiselect.min.css" rel="stylesheet" />
+<body style="overflow-x:hidden; background-color:white;">
+    <section style="padding:20px;">
+        <div class="container-fluid">
+            <div class="row" style=" padding-left:20px;padding-right:20px;">
+                <div class="nav nav-tabs-justified">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#RolePermessionTab" data-toggle="tab"><i class="fa  fa-windows"></i>&nbsp;角色权限管理</a></li>
+                        <li><a href="#AddRoleTab" data-toggle="tab"><i class="fa fa-file-excel-o"></i>&nbsp; 增加角色</a></li>
+                    </ul>
+
+
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="RolePermessionTab">
+                            <table id="RoleListTable" data-search="true" data-show-refresh="true" data-show-export="true"></table>
+                        </div>
+                        <div class="tab-pane" id="AddRoleTab">
+                            @using (Ajax.BeginForm("AddRole", "System", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "AfterAdd" }, new { id = "form-add", name = "form-add", @class = "form-horizontal" }))
+                            {
+                                <div class="row" style="padding-top:100px;">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">角色名称:</label>
+                                            <div class="col-sm-6">
+                                                @Html.TextBoxFor(m => m.RoleName, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">角色等级：</label>
+                                            <div class="col-sm-6">
+                                                @Html.TextBoxFor(m => m.RoleLevel, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">角色描述：</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @rows = "4" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group col-md-offset-1 ">
+                                                <span class="input-group-btn ">
+                                                    <button type="submit" class="btn btn-default">添  加  角  色</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="RolePermissionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    <h5 class="modal-title" id="myModalLabel">权限分配</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="HiddenRoleID" name="HiddenRoleID" />
+                    <p>权限列表</p>
+                    <select id="ActionURLSelect" multiple="multiple">
+                        <!--动态添加权限列表-->
+
+                    </select>
+                </div>
+              <div class="modal-footer">
+                    <input type="button" class="btn btn-primary" onclick="submitActionURL()" value="提交权限" />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryAjax")
+@Scripts.Render("~/bundles/bootstrap")
+<script src="~/Scripts/Bootstrap-Table/bootstrap-table.min.js"></script>
+<script src="~/Scripts/Bootstrap-Table/extensions/editable/bootstrap-table-editable.min.js"></script>
+<script src="~/Scripts/Bootstrap-Table/Bootstrap-Editable/bootstrap-editable.js"></script>
+<script src="~/Scripts/Bootstrap-Table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+<script src="~/Scripts/Jquery-Tree2.52/jquery.tree-multiselect.min.js"></script>
+<script>
+    //按钮提交权限  
+    function submitActionURL() {
+        var RoleID = $("#HiddenRoleID").val();//角色ID
+        var ActionURLIDArray = []; //ActionID数组
+        var $SelectedDiv = $(".selected>.item");
+        $.each($SelectedDiv, function (i, item) {
+            ActionURLIDArray.push($(this).attr("data-value"));
+        })
+        //更新权限数据库
+        $.post("/System/AssignPermissions", { RoleID: RoleID, ActionIDs: ActionURLIDArray }, function (data) {
+            if (data.Status == "OK") {
+                alert("添加角色权限成功！");
+            }
+            else {
+                alert("添加角色权限失败！\r\n 错误信息：" + ErrorMessage);
+            }
+        }, "json");
+    }
+
+    function AfterAdd(data) {
+        if (data.Status == "OK") {
+            alert("添加成功");
+
+        } else {
+            alert("添加失败");
+        }
+    }
+    function DeleteRole(roleid) {
+        $.post("/System/DeleteRole", { ID: roleid }, function (data) {
+            if (data.Status == "OK") {
+                alert("删除成功！");
+            } else {
+                alert("删除失败!");
+                return;
+            }
+        }, "json");
+
+    }
+    window.OperateEvents = {
+        'click .RoleEdit': function (e, value, row, index) {
+            alert('You click like action, row: ' + JSON.stringify(row));
+        },
+        'click .RoleDel': function (e, value, row, index) {
+            //在数据库中删除
+            DeleteRole(row.ID);
+            $("#RoleListTable").bootstrapTable('remove', {
+                field: 'ID',
+                values: [row.ID]
+            });
+        },
+        'click .RolePermission': function (e, value, row, index) {
+            //向模态框中传值
+            $('#HiddenRoleID').val(row.ID);
+            $("#RolePermissionModal").on("hidden.bs.modal", function () {
+                $(this).removeData("bs.modal");
+            });
+            //权限列表 
+            $.post("/System/GetOptionHtml?" + (new Date()).getTime(), { CurrentRoleID: row.ID }, function (data) {
+                $(this).removeData("bs.modal");
+                $("#ActionURLSelect").html(data);            
+                //$('#test-select').treeMultiselect({ searchable: true })[0].reload();      
+                if ($("#ActionURLSelect").treeMultiselect()) {
+                    $("#ActionURLSelect").treeMultiselect()[0].remove();
+                   
+                } else {
+                    $("#ActionURLSelect").treeMultiselect({ searchable: true });
+                }
+            });
+
+            $("#RolePermissionModal").on('show.bs.modal', function () {//数据加载完成后删除loading
+                $("#RolePermissionModal").remove(".tree-multiselect");
+            });
+           
+            //加载完html
+            $('#RolePermissionModal').modal("toggle");
+
+            $('#RolePermissionModal').on('hidden.bs.modal', function () {
+                window.location.reload();           
+            });
+
+
+         
+
+        }
+    };
+    function UpdateRoleColumn(role) {
+        $.post("/System/UpdateRole", { RoleModel: role }, function (data) {
+            if (data.Status == "OK") {
+                alert("更新成功！");
+            } else {
+                alert("更新失败！");
+            }
+        }, "json")
+    }
+
+    $(function () {
+        $.fn.editable.defaults.mode = 'inline'; //行内编辑
+        $('#RoleListTable').bootstrapTable({
+            url: '/System/GetAllRoleJson',
+            method: 'post',
+            uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+            columns: [{
+                field: 'ID',
+                title: '角色编号',
+                align: 'center',
+                sortable: true, rowspan: 1,
+
+            }, {
+                field: 'RoleName',
+                title: '角色名称',
+                align: 'center',
+                sortable: true,
+                editable: {
+                    type: 'text',
+                    title: '角色名称',
+                    validate: function (value) {
+                        value = $.trim(value);
+                        if (!value) {
+                            return '角色名称不能为空';
+                        }
+                        var data = $("#RoleListTable").bootstrapTable('getData'),
+                            index = $(this).parents('tr').data('index');
+                        data[index].RoleName = value;
+                        //执行修改数据方法
+                        UpdateRoleColumn(data[index]);                       
+                        return '';
+                    }
+                },
+            },
+            {
+                field: 'RoleLevel', title: '角色等级', align: 'center', sortable: true
+
+            },
+            {
+                field: 'Description',
+                title: '描述',
+                align: 'center', sortable: true,
+                editable: {
+                    type: 'text'
+                }
+            },
+            {
+                field: '', title: '操作', align: 'center',
+
+                formatter: function () {
+                    return [
+                        '<a class="RolePermission" href="javascript:void(0)" title="分配权限">',
+                        '<i class="glyphicon glyphicon-lock"></i>',
+                        '</a>  ',
+                        '<a class="RoleEdit" href="javascript:void(0)" title="修改">',
+                        '<i class="glyphicon glyphicon-edit"></i>',
+                        '</a>  ',
+                        '<a class="RoleDel" href="javascript:void(0)" title="删除">',
+                        '<i class="glyphicon glyphicon-trash"></i>',
+                        '</a>'
+                    ].join('');
+
+                },
+                events: OperateEvents
+            }
+
+            ],
+            pagination: true,
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+            pageSize: 18,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100], //如果设置了分页，设置可供选择的页面数据条数。设置为 All 或者 Unlimited
+
+        });
+    })
+
+
+
+
+</script>
+
+

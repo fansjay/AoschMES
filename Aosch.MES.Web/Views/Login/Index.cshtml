@@ -1,0 +1,119 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MES系统登录</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/Common.js"></script>
+
+</head>
+<body style="background-color:#00c0ff; overflow:hidden;">
+
+
+    <header>
+        <div class="container-fluid" style="height:70px; background-color:white;">
+            <div class="body-content">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <img style="padding-top:10px; padding-left:120px;" src="~/Content/Images/logo_login.png" />
+                    </div>
+
+                    <div class="col-md-4"></div>
+                    <div class="col-md-3">
+                        <h4 style="padding-top:15px; text-align:center">智能生产       一手掌握</h4>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </header>
+    <aside>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div style="margin-top:50%;"> <img src="~/Content/Images/system.png" />  </div>
+
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <div style="background-color:white;width:420px;height:400px; margin-top:60%;margin-left:60%;">
+
+                        <div style="font-size:20px;color:#00c0ff;padding-top:15px;"> &nbsp; &nbsp; 傲顺自动化<br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 助力中国制造2025   </div>
+                        <div style="padding-top:30px;padding-left:30px;">
+                            <input style="padding:0.8rem 1em 0.8em 2em; color:#00c0ff; border-color:#2259ac; outline-color:#00c0ff; width:350px;" id="Username" type="text" placeholder="请输入用户名">
+                            <span style="padding:14px; position:absolute;left:570px;top:318px;" class="glyphicon glyphicon-user"></span>
+                        </div>
+
+
+                        <div style="padding-top:30px;padding-left:30px;">
+                            <input style="padding:0.8rem 1em 0.8em 2em; color:#00c0ff; border-color:#2259ac; outline-color:#00c0ff; width:350px;" id="Password" type="password" placeholder="请输入密码">
+                            <span style="padding:14px; position:absolute;left:570px;top:396px;" class="glyphicon glyphicon-qrcode"></span>
+                        </div>
+
+
+                        <div>
+
+                            <input type="submit" id="LoginBtn" style="background-color:#00c0ff; margin-top:30px;margin-left:33px; color:white;border-color:#2db9f4; width:160px;height:50px;" onclick="Login()" value="登       录">
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+
+    </aside>
+    <footer>
+        <div class="container" style="background-color:black;color:white;font-size:14px;padding:10px 0; position:absolute;bottom:0; width:100%; text-align:center">
+            <p>深圳市傲顺精密科技有限公司版权所有&reg; 2018 ~ 2025 &copy; All Right Designed By Fansjay. </p>
+        </div>
+
+    </footer>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script>
+        $(function () {
+            $(document).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    Login();
+                }
+            });
+        });
+        function Login() {
+            var LoginCode = document.getElementById("Username").value;
+            var LoginPwd = document.getElementById("Password").value;
+            if (LoginCode.length < 1 || LoginPwd.length < 1) {
+                alert("用户名、密码不能为空！");
+                return false;
+            }
+           
+            $.post("/Login/Dologin", { 'LoginCode': LoginCode, 'LoginPwd': LoginPwd }, function (data) {
+                $("#LoginBtn").val(" 登   录   中···");
+                    if (data.Status == "OK") {
+                        var userinfo = data.LoginAccount;                       
+                        if (userinfo.Username != null) {
+                            setCookie('Username', userinfo.Username);
+                            window.location.href = "/Home/Index";
+                        }
+                    }
+                    else
+                    {
+                        alert("用户名或者密码错误！");
+                    }
+                   
+                },"json");
+        }
+    </script>
+</body>
+</html>
