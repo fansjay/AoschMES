@@ -68,16 +68,34 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RealName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmployeeName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TelphoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="DepartmentID" Type="int" Nullable="false" />
           <Property Name="GroupID" Type="int" Nullable="false" />
-          <Property Name="RegisterTime" Type="datetime" Nullable="false" />
-          <Property Name="Sex" Type="smallint" Nullable="false" />
-          <Property Name="Birthday" Type="datetime" Nullable="false" />
-          <Property Name="Salary" Type="decimal" Precision="7" Scale="2" Nullable="false" />
-          <Property Name="PositionID" Type="int" Nullable="false" />
-          <Property Name="IDCardNumber" Type="nvarchar" MaxLength="18" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Sex" Type="int" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Birthday" Type="date" Nullable="false" />
+          <Property Name="HireDate" Type="date" Nullable="false" />
+          <Property Name="FireDate" Type="date" />
+          <Property Name="Position" Type="nvarchar" MaxLength="50" />
+          <Property Name="IDCardNumber" Type="nvarchar" MaxLength="18" />
+          <Property Name="RecordAccount" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Thread" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Level" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Logger" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="4000" Nullable="false" />
+          <Property Name="Exception" Type="varchar" MaxLength="2000" />
         </EntityType>
         <EntityType Name="Position">
           <Key>
@@ -110,6 +128,7 @@
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Log" EntityType="Self.Log" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Position" EntityType="Self.Position" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoleActionURL_Mapping" EntityType="Self.RoleActionURL_Mapping" Schema="dbo" store:Type="Tables" />
@@ -161,22 +180,6 @@
           <Property Name="DepartmentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="Employee">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RealName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="DepartmentID" Type="Int32" Nullable="false" />
-          <Property Name="GroupID" Type="Int32" Nullable="false" />
-          <Property Name="RegisterTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Sex" Type="Int16" Nullable="false" />
-          <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Salary" Type="Decimal" Precision="7" Scale="2" Nullable="false" />
-          <Property Name="PositionID" Type="Int32" Nullable="false" />
-          <Property Name="IDCardNumber" Type="String" MaxLength="18" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
         <EntityType Name="Position">
           <Key>
             <PropertyRef Name="ID" />
@@ -206,11 +209,12 @@
           <EntitySet Name="Account" EntityType="Self.Account" />
           <EntitySet Name="Customer" EntityType="Self.Customer" />
           <EntitySet Name="Department" EntityType="Self.Department" />
-          <EntitySet Name="Employee" EntityType="Self.Employee" />
           <EntitySet Name="Position" EntityType="Self.Position" />
           <EntitySet Name="Role" EntityType="Self.Role" />
           <EntitySet Name="RoleActionURL_Mapping" EntityType="Self.RoleActionURL_Mapping" />
           <EntitySet Name="ActionURL" EntityType="Aosch.MES.Model.ActionURL" />
+          <EntitySet Name="Log" EntityType="Aosch.MES.Model.Log" />
+          <EntitySet Name="Employee" EntityType="Aosch.MES.Model.Employee" />
         </EntityContainer>
         <EntityType Name="ActionURL">
           <Key>
@@ -226,6 +230,40 @@
           <Property Name="Showable" Type="Boolean" Nullable="false" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="IsRoot" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Thread" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Logger" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="Exception" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TelphoneNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NickName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DepartmentID" Type="Int32" Nullable="false" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <Property Name="Sex" Type="Int32" Nullable="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="HireDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FireDate" Type="DateTime" Precision="0" />
+          <Property Name="Position" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IDCardNumber" Type="String" MaxLength="18" FixedLength="false" Unicode="true" />
+          <Property Name="RecordAccount" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -279,23 +317,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Employee">
-      <EntityTypeMapping TypeName="IsTypeOf(Aosch.MES.Model.Employee)">
-        <MappingFragment StoreEntitySet="Employee">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="RealName" ColumnName="RealName" />
-          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
-          <ScalarProperty Name="RegisterTime" ColumnName="RegisterTime" />
-          <ScalarProperty Name="Sex" ColumnName="Sex" />
-          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
-          <ScalarProperty Name="Salary" ColumnName="Salary" />
-          <ScalarProperty Name="PositionID" ColumnName="PositionID" />
-          <ScalarProperty Name="IDCardNumber" ColumnName="IDCardNumber" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Position">
       <EntityTypeMapping TypeName="IsTypeOf(Aosch.MES.Model.Position)">
         <MappingFragment StoreEntitySet="Position">
@@ -340,6 +361,42 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+          <EntitySetMapping Name="Log">
+            <EntityTypeMapping TypeName="Aosch.MES.Model.Log">
+              <MappingFragment StoreEntitySet="Log">
+                <ScalarProperty Name="Exception" ColumnName="Exception" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Logger" ColumnName="Logger" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Thread" ColumnName="Thread" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employee">
+            <EntityTypeMapping TypeName="Aosch.MES.Model.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="RecordAccount" ColumnName="RecordAccount" />
+                <ScalarProperty Name="IDCardNumber" ColumnName="IDCardNumber" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="FireDate" ColumnName="FireDate" />
+                <ScalarProperty Name="HireDate" ColumnName="HireDate" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="TelphoneNumber" ColumnName="TelphoneNumber" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

@@ -39,7 +39,7 @@
                                         <div class="form-group">
                                             <label for="inputSkills" class="col-sm-1 control-label">角色等级：</label>
                                             <div class="col-sm-6">
-                                                @Html.TextBoxFor(m => m.RoleLevel, new { @class = "form-control" })
+                                                @Html.DropDownListFor(m => m.RoleLevel, ViewBag.RoleLevelList as IEnumerable<SelectListItem>, new { @class = "form-control" })
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -95,9 +95,6 @@
         </div>
     </div>
 </body>
-
-
-
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/jqueryAjax")
 @Scripts.Render("~/bundles/bootstrap")
@@ -238,8 +235,14 @@
                 },
             },
             {
-                field: 'RoleLevel', title: '角色等级', align: 'center', sortable: true
-
+                field: 'RoleLevel', title: '角色等级', align: 'center', sortable: true,
+                formatter: function (value, row, index) {
+                    if (value == "10") { return "超级管理员"; }
+                    else if (value == "100") { return "系统管理员"; }
+                    else if (value == "200") { return "公司管理"; }
+                    else if (value == "300") { return "普通员工"; }
+                    else { return "其它"; }
+                }
             },
             {
                 field: 'Description',

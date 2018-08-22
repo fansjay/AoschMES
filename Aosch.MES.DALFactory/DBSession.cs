@@ -40,23 +40,37 @@ namespace Aosch.MES.DALFactory
             }
 
         }
+       
 
-     
+        private ILogDAL _LogDal;
+        public ILogDAL LogDal
+        {
+            set { _LogDal = value; }
+            get
+            {
+                if (_LogDal == null)
+                {
+                    _LogDal = AbstractFactory.CreateLogDAL();
+                }
+                return _LogDal;
+            }
+        }
 
 
-        //private IAccountRole_MappingDAL _AccountRole_MappingDal;
-        //public IAccountRole_MappingDAL AccountRole_MappingDal
-        //{
-        //    set { _AccountRole_MappingDal = value; }
-        //    get
-        //    {
-        //        if (_AccountRole_MappingDal == null)
-        //        {
-        //            _AccountRole_MappingDal = AbstractFactory.CreateAccountRole_MappingDAL();
-        //        }
-        //        return _AccountRole_MappingDal;
-        //    }
-        //}
+
+        private IEmployeeDAL _EmployeeDal;
+        public IEmployeeDAL EmployeeDal
+        {
+            set { _EmployeeDal = value; }
+            get
+            {
+                if (_EmployeeDal == null)
+                {
+                    _EmployeeDal = AbstractFactory.CreateEmployeeDAL();
+                }
+                return _EmployeeDal;
+            }
+        }
 
 
 
@@ -93,6 +107,9 @@ namespace Aosch.MES.DALFactory
         {
             get { return DBContextFactory.CreateDBContext(); }
         }
+
+       
+
         public bool SaveChanges()
         {
             try

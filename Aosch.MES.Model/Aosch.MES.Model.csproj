@@ -79,6 +79,9 @@
     <Compile Include="Employee.cs">
       <DependentUpon>AoschMesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Log.cs">
+      <DependentUpon>AoschMesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Position.cs">
       <DependentUpon>AoschMesModel.tt</DependentUpon>
     </Compile>

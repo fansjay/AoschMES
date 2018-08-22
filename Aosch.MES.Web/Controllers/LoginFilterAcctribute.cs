@@ -18,8 +18,12 @@ namespace Aosch.MES.Web.Controllers
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             var memberValidation = httpContext.Request.Cookies["Username"];
-
-            return httpContext.Request.Cookies["Username"] != null;
+            var CurrentAccount = httpContext.Request.Cookies["CurrentAccount"];
+            if (memberValidation!=null && CurrentAccount != null)
+            {
+                return true;
+            }
+            return false;
         }
 
     }

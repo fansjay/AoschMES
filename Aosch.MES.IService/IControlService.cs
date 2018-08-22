@@ -30,5 +30,9 @@ namespace Aosch.MES.IService
         string GetAllOptionHTML(int CurrentRoleID);
     }
 
+    public interface ILogService : IBaseService<Log> { }
+    public interface IEmployeeService : IBaseService<Employee> { }
+
+
    
 }

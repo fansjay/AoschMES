@@ -184,6 +184,29 @@ namespace Aosch.MES.Service
         }
     }
 
+    public class LogService : BaseService<Log>, ILogService
+    {
+        public bool ExistEntity(int ID)
+        {
+            return CurrentDBSession.LogDal.LoadEntities(a => a.ID == ID).Count() > 0;
+        }
 
+        public override void SetCurrentDAL()
+        {
+            CurrentDAL = this.CurrentDBSession.LogDal;
+        }
+    }
 
+    public class EmployeeService : BaseService<Employee>, IEmployeeService
+    {
+        public bool ExistEntity(int ID)
+        {
+            return CurrentDBSession.EmployeeDal.LoadEntities(a => a.ID == ID).Count() > 0;
+        }
+
+        public override void SetCurrentDAL()
+        {
+            CurrentDAL = this.CurrentDBSession.EmployeeDal;
+        }
+    }
 }

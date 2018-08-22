@@ -28,10 +28,11 @@ namespace Aosch.MES.Model
         public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<Department> Department { get; set; }
-        public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<Position> Position { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<RoleActionURL_Mapping> RoleActionURL_Mapping { get; set; }
         public virtual DbSet<ActionURL> ActionURL { get; set; }
+        public virtual DbSet<Log> Log { get; set; }
+        public virtual DbSet<Employee> Employee { get; set; }
     }
 }

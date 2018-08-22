@@ -1,5 +1,9 @@
 ﻿using Aosch.MES.Service;
+using Newtonsoft.Json;
+using System;
 using System.Reflection;
+using System.Text;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Aosch.MES.Web.Controllers
@@ -36,7 +40,21 @@ namespace Aosch.MES.Web.Controllers
             {
                 //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Info, $"用户名:{userName}的用户登录成功！\n");
                 logger.Info($"用户名:{userName}的用户登录成功!");
-                Session["CurrentAccount"] = account;
+                //Session["CurrentAccount"] = account;  session容易失效
+
+
+                //创建cookie对象
+                HttpCookie CurrentAccountCookie = new HttpCookie("CurrentAccount");
+
+                //将序列化之后的Json串以UTF-8编码，再存入Cookie
+                CurrentAccountCookie.Value = HttpUtility.UrlEncode(JsonConvert.SerializeObject(account), Encoding.GetEncoding("UTF-8"));
+
+                //将cookie写入到客户端
+                System.Web.HttpContext.Current.Response.SetCookie(CurrentAccountCookie);
+
+                //设置cookie保存时间
+                CurrentAccountCookie.Expires = DateTime.Now.AddDays(2);
+
                 return Json(new {LoginAccount=account,Status="OK"});
             }
             

@@ -15,5 +15,10 @@ namespace Aosch.MES.DAL
     {
        
     }
+    public class LogDAL:BaseDAL<Log>,ILogDAL
+    {
+
+    }
+    public class EmployeeDAL : BaseDAL<Employee>, IEmployeeDAL { }
 
 }

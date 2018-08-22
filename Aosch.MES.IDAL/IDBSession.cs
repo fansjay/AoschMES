@@ -20,7 +20,7 @@ namespace Aosch.MES.IDAL
         //IWareHouseDAL WareHouseDal { set; get; }
         //IAccountRole_MappingDAL AccountRole_MappingDal{set;get;}
         //IDepartmentDAL DepartmentDal { set; get; }
-
-
+        ILogDAL LogDal { set; get; }
+        IEmployeeDAL EmployeeDal { set; get; }
     }
 }

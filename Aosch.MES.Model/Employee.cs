@@ -15,15 +15,21 @@ namespace Aosch.MES.Model
     public partial class Employee
     {
         public int ID { get; set; }
-        public string RealName { get; set; }
+        public string EmployeeName { get; set; }
+        public string TelphoneNumber { get; set; }
+        public string Email { get; set; }
+        public string NickName { get; set; }
         public int DepartmentID { get; set; }
         public int GroupID { get; set; }
-        public System.DateTime RegisterTime { get; set; }
-        public short Sex { get; set; }
+        public int Sex { get; set; }
+        public string Address { get; set; }
         public System.DateTime Birthday { get; set; }
-        public decimal Salary { get; set; }
-        public int PositionID { get; set; }
+        public System.DateTime HireDate { get; set; }
+        public Nullable<System.DateTime> FireDate { get; set; }
+        public string Position { get; set; }
         public string IDCardNumber { get; set; }
+        public string RecordAccount { get; set; }
+        public bool Status { get; set; }
         public string Description { get; set; }
     }
 }

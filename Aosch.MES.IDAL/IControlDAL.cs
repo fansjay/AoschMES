@@ -12,10 +12,10 @@ namespace Aosch.MES.IDAL
     }
     public interface IRoleDAL : IBaseDAL<Role>
     {
-       
-       
     }
 
+    public interface ILogDAL : IBaseDAL<Log> { }
+    public interface IEmployeeDAL : IBaseDAL<Employee> { }
 
 
 }

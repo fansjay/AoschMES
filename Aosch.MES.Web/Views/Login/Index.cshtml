@@ -104,6 +104,10 @@
                         var userinfo = data.LoginAccount;                       
                         if (userinfo.Username != null) {
                             setCookie('Username', userinfo.Username);
+                            if (!getCookie('CurrentAccount'))
+                            {
+                                return false;
+                            }
                             window.location.href = "/Home/Index";
                         }
                     }

@@ -290,7 +290,7 @@ $(".J_menuItem").each(function (index) {
 function onMenuItemClick(a) {
     var Flevel = a.MenuName;
     var breadcrumpstring = "";
-    console.log(a);
+  
     //添加TAB
     flag = true;
     var URL = a.dataset.href;
@@ -299,7 +299,6 @@ function onMenuItemClick(a) {
 
     if (URL == null || URL=="") return;
     Title = $(a).text();
-    console.log(Title);
      //选项卡菜单已存在
     $('.J_menuTab').each(function () {
         if ($(this).data("id") == URL) {

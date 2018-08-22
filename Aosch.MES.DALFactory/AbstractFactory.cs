@@ -30,7 +30,17 @@ namespace Aosch.MES.DALFactory
             string fullClassName = NameSpace + ".RoleDAL";
             return CreateInstance(fullClassName) as IRoleDAL;
         }
-     
+        public static ILogDAL CreateLogDAL()
+        {
+            string fullClassName = NameSpace + ".LogDAL";
+            return CreateInstance(fullClassName) as ILogDAL;
+        }
+        public static IEmployeeDAL CreateEmployeeDAL()
+        {
+            string fullClassName = NameSpace + ".EmployeeDAL";
+            return CreateInstance(fullClassName) as IEmployeeDAL;
+        }
+
 
         //public static IAccountRole_MappingDAL CreateAccountRole_MappingDAL()
         //{

@@ -1,0 +1,177 @@
+﻿@model Aosch.MES.Model.Log
+@{
+    ViewBag.Title = "日志管理";
+}
+
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/Bootstrap-Table/bootstrap-table.min.css" rel="stylesheet" />
+<body style="overflow-x:hidden; background-color:white;">
+    <section style="padding:20px;">
+        <div class="container-fluid">
+
+
+            <!--日志工具栏-->
+            <div id="LogToolBar" >
+                <button id="DelSelectedLog" class="btn btn-danger btn-flat"><i class="glyphicon glyphicon-trash"></i> 清除选中日志</button>
+            </div>
+
+            <div class="row" style=" padding-left:20px;padding-right:20px;">
+                <table id="LogListTable" data-toolbar="#LogToolBar" data-search="true" data-show-refresh="true" data-show-export="true"></table>
+            </div>
+        </div>
+    </section>
+</body>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryAjax")
+@Scripts.Render("~/bundles/bootstrap")
+<script src="~/Scripts/Bootstrap-Table/bootstrap-table.min.js"></script>
+<script src="~/Scripts/Bootstrap-Table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script>
+    //按钮提交权限
+
+    function DeleteLog(Logid) {
+        $.post("/System/DeleteLog", { ID: Logid }, function (data) {
+            if (data.Status == "OK") {
+                alert("删除成功！");
+            } else {
+                alert("删除失败!");               
+            }
+        }, "json");
+
+    }
+    window.OperateEvents = {
+
+        'click .LogDel': function (e, value, row, index) {
+            //在数据库中删除
+            DeleteLog(row.ID);
+            $("#LogListTable").bootstrapTable('remove', {
+                field: 'ID',
+                values: [row.ID]
+            });
+        },
+    };
+
+
+    $(function () {
+        $('#LogListTable').bootstrapTable({
+            url: '/System/GetAllLogJson',
+            method: 'post',
+            uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+            columns: [
+                { checkbox: true },
+
+                {
+                field: 'ID',
+                title: '日志编号',
+                align: 'center',
+                sortable: true, rowspan: 1,
+
+            }, {
+                field: 'Thread',
+                title: '操作线程',
+                align: 'center',
+                sortable: true,
+            },
+            {
+                field: 'Level', title: '日志类别', align: 'center', sortable: true,
+
+                rowStyle: function (row, index) { //设置行的特殊样式
+                    //这里有5个取值颜色['active', 'success', 'info', 'warning', 'danger'];
+                    console.log(index);
+                    var strclass = "";
+                    if (row.Level == "ERROR") {
+                        strclass = "warning";
+                    }
+                    return { classes: strclass }
+                }
+
+            },
+            {
+                field: 'Logger',
+                title: '日志发送者',
+                align: 'center', sortable: true,
+            },
+            {
+                field: 'Message', title: '日志内容', align: 'center',
+
+
+            },
+            {
+                field: 'Exception',
+                title: '错误制造者',
+                align: 'center', sortable: true,
+            },
+
+            {
+                field: 'Date',
+                title: '日志时间',
+                align: 'center', sortable: true,
+                formatter: function myfunction(value, row, index) { //日期格式化
+                    if (value != null) {
+                        var date = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+                        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+                        var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                        var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+                    }
+                }
+
+            },
+            {
+
+                field: '',
+                title: '日志操作',
+                align: 'center', sortable: true,
+                formatter: function () {
+                    return [
+                        '<a class="LogDel" href="javascript:void(0)" title="删除">',
+                        '<i class="glyphicon glyphicon-trash"></i>',
+                        '</a>'
+                    ].join('');
+
+                },
+                events: OperateEvents
+            }
+
+            ],
+            pagination: true,
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+            pageSize: 18,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100], //如果设置了分页，设置可供选择的页面数据条数。设置为 All 或者 Unlimited
+
+        });
+
+        //批量删除
+        $("#DelSelectedLog").click(function () {
+            var rows = $('#LogListTable').bootstrapTable('getAllSelections');
+            var SelectedIDs = [];
+            $.map(rows, function (item) {
+                SelectedIDs.push(item.ID);
+            });
+            console.log(SelectedIDs);
+            $.post("/System/DeleteLogs", { IDs: SelectedIDs}, function (data) {
+                if (data.Status == "OK") {
+                    alert(data.Message);
+                    $("#LogListTable").bootstrapTable('remove', { field: 'ID', values: SelectedIDs });
+                    $("#LogListTable").bootstrapTable('refresh', { url:"/System/GetAllLogJson" });
+                } else {
+                    alert("删除失败!错误信息："+data.Message);
+                }
+            },"json")
+
+        })
+    })
+
+
+
+
+</script>
+
+
