@@ -2,6 +2,7 @@
 using log4net;
 using log4net.Config;
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -12,7 +13,7 @@ namespace Aosch.MES.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-        ILog logger = LogManager.GetLogger("errorMsg");
+        log4net.ILog logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         protected void Application_Start()
         {
 

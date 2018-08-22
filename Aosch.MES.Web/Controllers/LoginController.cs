@@ -1,18 +1,12 @@
-﻿using Aosch.MES.Common;
-using Aosch.MES.Model;
-using Aosch.MES.Service;
-using log4net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Aosch.MES.Service;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace Aosch.MES.Web.Controllers
 {
     public class LoginController : Controller
     {
-        ILog logger = LogManager.GetLogger("LoginController");
+        log4net.ILog logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         // GET: Login
         public ActionResult Index()
         {
@@ -42,6 +36,7 @@ namespace Aosch.MES.Web.Controllers
             {
                 //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Info, $"用户名:{userName}的用户登录成功！\n");
                 logger.Info($"用户名:{userName}的用户登录成功!");
+                Session["CurrentAccount"] = account;
                 return Json(new {LoginAccount=account,Status="OK"});
             }
             

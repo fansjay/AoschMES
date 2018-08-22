@@ -1,5 +1,6 @@
 ﻿using Aosch.MES.Service;
 using log4net;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace Aosch.MES.Web.Controllers
@@ -8,7 +9,7 @@ namespace Aosch.MES.Web.Controllers
     public class HomeController : Controller
     {
 
-        ILog logger = LogManager.GetLogger("errorMsg");
+        log4net.ILog logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public ActionResult Index()
         {
             var accounts= new AccountService().LoadEntities(a => a.ID > 0);

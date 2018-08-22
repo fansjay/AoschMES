@@ -35,9 +35,6 @@ namespace Aosch.MES.Service
         {
             CurrentDAL = this.CurrentDBSession.AccountDal;
         }
-
-       
-
     }
 
     public class RoleService : BaseService<Role>, IRoleService
@@ -136,6 +133,7 @@ namespace Aosch.MES.Service
         public bool InsertRolePermissions(int RoleID, int ActionURLID)
         {
             string SQLString = "INSERT INTO RoleActionURL_Mapping(RoleID,ActionURLID) VALUES(@RoleID,@ActionURLID)";
+            
             return CurrentDBSession.ExcuteSQL(SQLString, new SqlParameter[] { new SqlParameter("@RoleID", RoleID), new SqlParameter("@ActionURLID", ActionURLID) }) > 0;
         }
 
@@ -181,7 +179,6 @@ namespace Aosch.MES.Service
                     var RootName = ActionURLs.Where(a => a.ID == (ActionURLs.Where(B => B.ID == item.ParentID).FirstOrDefault().ParentID)).FirstOrDefault().MenuName + "/" + ActionURLs.Where(a => a.ID == item.ParentID).FirstOrDefault().MenuName;
                     HtmlString += $" <option value=\"{item.ID}\" data-section=\"{RootName}\" {selected}>{item.MenuName}</option>\n";
                 }
-
             }
             return HtmlString;
         }

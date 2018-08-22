@@ -1,16 +1,14 @@
-﻿using Aosch.MES.Common;
-using Aosch.MES.Model;
+﻿using Aosch.MES.Model;
 using Aosch.MES.Service;
-using log4net;
-using System;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace Aosch.MES.Web.Controllers
 {
     public class SystemController : Controller
     {
-        ILog logger = LogManager.GetLogger("SystemController");
+        log4net.ILog logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public RoleService roleService = new RoleService();
         // GET: System
         public ActionResult Index()
@@ -61,6 +59,8 @@ namespace Aosch.MES.Web.Controllers
             {
                 if (roleService.UpdateEntity(RoleModel))
                 {
+                    var a = Session["CurrentAccount"] as Account;
+                    logger.Info($"用户{a.Username}：修改了角色ID为{RoleModel.ID},角色名为:{RoleModel.RoleLevel}的角色！");
                     return Json(new { Status = "OK" });
                 }
             }
@@ -76,7 +76,7 @@ namespace Aosch.MES.Web.Controllers
                if (roleService.DeleteEntity(role))
                 {
                     //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Warning, $"用户 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
-                    logger.Info($"用户 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
+                    logger.Warn($"用户 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
                     return Json(new { Status = "OK" });
                 }
             }
