@@ -17,5 +17,6 @@ namespace Aosch.MES.Model
         public int ID { get; set; }
         public string PositionName { get; set; }
         public string Description { get; set; }
+        public bool Status { get; set; }
     }
 }

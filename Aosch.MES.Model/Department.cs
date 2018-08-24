@@ -18,5 +18,6 @@ namespace Aosch.MES.Model
         public string DepartmentName { get; set; }
         public string DepartmentType { get; set; }
         public string Description { get; set; }
+        public bool Staus { get; set; }
     }
 }

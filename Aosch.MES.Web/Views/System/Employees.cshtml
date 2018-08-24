@@ -10,9 +10,71 @@
 <link href="~/Content/Bootstrap-Table/bootstrap-table.min.css" rel="stylesheet" />
 <link href="~/Content/Bootstrap-Table/Bootstrap-Editable/bootstrap-editable.css" rel="stylesheet" />
 <link href="~/Content/Jquery-Tree2.52/jquery.tree-multiselect.min.css" rel="stylesheet" />
+<link href="~/Content/Bootstrap-Datepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<style>
+
+
+    /*邮箱下拉列表*/
+    .ipt {
+        width: 218px;
+    }
+    /* 输入框外围div */
+    #Email input {
+        margin: 0;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 184px;
+    }
+    /* 输入框 */
+    ul.autoul { /* 下拉菜单 */
+        width: 216px;
+        margin: 0px;
+        margin-top: -5px;
+        padding: 0px;
+        color: #666;
+        border: 1px solid #666;
+        border-top: 0;
+        overflow: hidden;
+    }
+
+        ul.autoul li.autoli { /* 下拉菜单li */
+            height: 30px;
+            display: block;
+            list-style-type: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 30px;
+            padding-left: 15px;
+            padding-right: 15px;
+            overflow: hidden;
+            /*当对象内文本溢出时显示省略标记*/
+            text-overflow: ellipsis;
+        }
+
+    .lihover { /* 下拉菜单li高亮样式 */
+        background-color: #eee;
+    }
+
+    span {
+        padding-right: 2px;
+    }
+    /* li下文字 */
+    .showli {
+        display: block;
+    }
+    /* 经过过滤的li的样式 */
+
+</style>
 <body style="overflow-x:hidden; background-color:white;">
-    <section style="padding:20px;">
+    <section style="margin:10px;border:1px solid #eee">
         <div class="container-fluid">
+
+            <!--日志工具栏-->
+            <div id="EmployeeToolBar">
+                <button id="DelSelectedEmployee" class="btn btn-danger btn-flat"><i class="glyphicon glyphicon-trash"></i> 删除选中员工</button>
+            </div>
             <div class="row" style=" padding-left:20px;padding-right:20px;">
                 <div class="nav nav-tabs-justified">
                     <ul class="nav nav-tabs">
@@ -22,100 +84,115 @@
                     </ul>
                     <div class="tab-content">
                         <div class="active tab-pane" id="EmployeeTab">
-                            <table id="EmployeeListTable" data-search="true" data-show-refresh="true" data-show-export="true"></table>
+                            <table id="EmployeeListTable" data-toolbar="#EmployeeToolBar" data-search="true" data-show-refresh="true" data-show-export="true"></table>
                         </div>
                         <div class="tab-pane" id="AddEmployeeTab">
                             @using (Ajax.BeginForm("AddEmployee", "System", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "AfterAdd" }, new { id = "form-add", name = "form-add", @class = "form-horizontal" }))
                             {
-                                <div class="row" style="padding-top:100px;">
+                                <div class="row" style="padding-top:40px;">
                                     <div class="col-md-2"></div>
                                     <div class="col-md-8">
                                         <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">员工帐号:</label>
-                                            <div class="col-sm-6">
-                                                @Html.TextBoxFor(m => m.EmployeeName, new { @class = "form-control" })
+                                            <label for="inputSkills" class="col-sm-1 control-label">帐号:</label>
+                                            <div class="col-sm-3">
+                                                @Html.TextBoxFor(m => m.EmployeeName, new { placeholder = "1~50个字符", @class = "form-control" })
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">电话号码：</label>
-                                            <div class="col-sm-6">
-                                                @*@Html.DropDownListFor(m => m.TelphoneNumber, ViewBag.RoleLevelList as IEnumerable<SelectListItem>, new { @class = "form-control" })*@
-                                                @Html.TextBoxFor(m => m.TelphoneNumber, new { @class = "form-control" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">真实姓名：</label>
-                                            <div class="col-sm-8">
-                                                @Html.TextBoxFor(m => m.NickName, new { @class = "form-control" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">邮箱：</label>
-                                            <div class="col-sm-8">
-                                                @Html.TextAreaFor(m => m.Email, new { @class = "form-control", @rows = "4" })
-                                            </div>
+                                            <label class="control-label text  text-danger">*</label>
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">部门：</label>
-                                            <div class="col-sm-8">
-                                                @Html.TextAreaFor(m => m.DepartmentID, new { @class = "form-control", @rows = "4" })
-                                            </div>
-                                        </div>
 
                                         <div class="form-group">
                                             <label for="inputSkills" class="col-sm-1 control-label">组别:</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 @Html.TextBoxFor(m => m.GroupID, new { @class = "form-control" })
                                             </div>
-                                        </div>
 
+                                            <label class="control-label text  text-danger">*</label>
+                                        </div>
                                         <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">入职:</label>
+                                            <div class="col-sm-3">
+                                                <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd">
+                                                    @Html.TextBoxFor(m => m.HireDate, new { Value = " 2018-06-06", @class = "form-control" })
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                </div>
+                                            </div>
+
+                                            <label for="inputSkills" class="col-sm-1 control-label">出生:</label>
+                                            <div class="col-sm-2">
+                                                <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd">
+                                                    @Html.TextBoxFor(m => m.Birthday, new { Value = " 1990-08-08", @class = "form-control" })
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                </div>
+                                            </div>
+                                            <label class="control-label text  text-danger">*</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">部门:</label>
+                                            <div class="col-sm-3">
+                                                @Html.DropDownListFor(m => m.DepartmentID, ViewBag.DepartmentsList as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                                            </div>
+                                            <label for="inputSkills" class="col-sm-1 control-label">职位:</label>
+                                            <div class="col-sm-2">
+                                                @Html.DropDownListFor(m => m.PositionID, ViewBag.PositionsList as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                                            </div>
+                                            <label class="control-label text  text-danger">*</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">姓名:</label>
+                                            <div class="col-sm-3">
+                                                @Html.TextBoxFor(m => m.NickName, new { placeholder = "真实姓名", @class = "form-control" })
+                                            </div>
+                                            <label class="control-label text  text-danger">*</label>
+
                                             <label for="inputSkills" class="col-sm-1 control-label">性别:</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-2">
                                                 @Html.DropDownListFor(m => m.Sex, ViewBag.SexList as IEnumerable<SelectListItem>, new { @class = "form-control" })
                                             </div>
                                         </div>
-
                                         <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">出生年月:</label>
-                                            <div class="col-sm-6">
-                                                @Html.TextBoxFor(m => m.Birthday, new { @class = "form-control" })
+                                            <label for="inputSkills" class="col-sm-1 control-label">电话:</label>
+                                            <div class="col-sm-3">
+                                                @Html.TextBoxFor(m => m.TelphoneNumber, new { placeholder = "请输入真实电话号码备校验", @class = "form-control" })
                                             </div>
+
+                                            <label for="inputSkills" class="col-sm-1 control-label">邮箱:</label>
+                                            <div class="col-sm-3">
+                                                @Html.TextBoxFor(m => m.Email, new { placeholder = "常用邮箱", @class = "form-control" })
+                                                <ul class="autoul"></ul>
+                                            </div>
+                                            <label class="control-label text  text-danger">*</label>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="inputSkills" class="col-sm-1 control-label">地址:</label>
-                                            <div class="col-sm-6">
-                                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                                            <div class="col-sm-7">
+                                                @Html.TextAreaFor(m => m.Address, new { placeholder = "家庭住址或者常住地址", @class = "form-control", @rows = "2" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">身份证:</label>
+                                            <div class="col-sm-4">
+                                                @Html.TextBoxFor(m => m.IDCardNumber, new { placeholder = "身份证号码可以不填写", @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputSkills" class="col-sm-1 control-label">启用:</label>
+                                            <div class="col-sm-2">
+                                                @Html.DropDownListFor(m => m.Status, ViewBag.StatusList as IEnumerable<SelectListItem>, new { @class = "form-control" })
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">职位:</label>
-                                            <div class="col-sm-6">
-                                                @Html.TextBoxFor(m => m.Position, new { @class = "form-control" })
+                                            <label for="inputSkills" class="col-sm-1 control-label">备注:</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextAreaFor(m => m.Description, new { placeholder = "随便说点什么吧 8/500....", @class = "form-control", @rows = "4" })
                                             </div>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">身份证号码:</label>
-                                            <div class="col-sm-6">
-                                                @Html.TextBoxFor(m => m.IDCardNumber, new { @class = "form-control" })
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-1 control-label">是否启用:</label>
-                                            <div class="col-sm-6">
-                                                @Html.DropDownListFor(m => m.TelphoneNumber, ViewBag.StatusList as IEnumerable<SelectListItem>, new { @class = "form-control" })
-                                            </div>
-                                        </div>
-
                                         <div class="form-group">
                                             <div class="input-group col-md-offset-1 ">
                                                 <span class="input-group-btn ">
-                                                    <button type="submit" class="btn btn-default">添  加  员  工</button>
+                                                    <button type="button" id="AddEmployeeBtn" class="btn btn-default">添  加  员  工</button>
                                                 </span>
                                             </div>
                                         </div>
@@ -125,16 +202,15 @@
                             }
                         </div>
                         <div class="tab-pane" id="BatchAddRoleTab">
-
-                            <div class="function layui-this accordion">
-                                <script>
-
-
-                                </script>
-                            </div>
-
-
                             <div class="row">
+
+                                <div class="box-body" style=" padding-top:30px;">
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        <h4><i class="glyphicon glyphicon-flash"></i> 注意事项</h4>
+                                        <p>必须是Excel表格文件(并且必须是2007版本以上的Office)后缀名为.xlsx</p>
+                                    </div>
+                                </div>
                                 <div class="message warning">
                                     <p>1.必须是Excel表格文件(并且必须是2007版本以上的Office)后缀名为.xlsx</p>
                                     <p>2.使用系统提供的模板。否则有可能导入不成功！</p>
@@ -146,7 +222,7 @@
                                         <div class="input-group">
                                             <input type="file" value="Excel表格" class="form-control" />
                                             <span class="input-group-btn">
-                                                <button type="submit" class="btn btn-primary btn-flat">批量添加员工信息</button>
+                                                <button type="button" class="btn btn-primary btn-flat" onclick="javascript: alert('程序GG正在努力....');">批量添加员工信息</button>
                                             </span>
                                         </div>
                                     </div>
@@ -157,14 +233,8 @@
 
                                 <!-- /.box-tools -->
                             </div>
-
-
-
-
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -198,12 +268,15 @@
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/jqueryAjax")
 @Scripts.Render("~/bundles/bootstrap")
+
 <script src="~/Scripts/Bootstrap-Table/bootstrap-table.min.js"></script>
 <script src="~/Scripts/Bootstrap-Table/extensions/editable/bootstrap-table-editable.min.js"></script>
 <script src="~/Scripts/Bootstrap-Table/Bootstrap-Editable/bootstrap-editable.js"></script>
 <script src="~/Scripts/Bootstrap-Table/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="~/Scripts/jquery-ui.js"></script>
 <script src="~/Scripts/Jquery-Tree2.52/jquery.tree-multiselect.min.js"></script>
+<script src="~/Scripts/Bootstrap-Datepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="~/Scripts/Bootstrap-Datepicker/bootstrap-datetimepicker.zh-CN.js"></script>
 <script>
 
 
@@ -214,11 +287,9 @@
             var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
             var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
             var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-
             var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
             var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
             var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
             return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
         }
     }
@@ -241,7 +312,6 @@
             }
         }, "json");
     }
-
     function AfterAdd(data) {
         if (data.Status == "OK") {
             alert("添加成功");
@@ -249,131 +319,300 @@
         } else {
             alert("添加失败");
         }
-    }
-    function DeleteRole(roleid) {
-        $.post("/System/DeleteRole", { ID: roleid }, function (data) {
-            if (data.Status == "OK") {
-                alert("删除成功！");
-            } else {
-                alert("删除失败!");
-                return;
-            }
-        }, "json");
-
-    }
+    } 
     window.OperateEvents = {
-        'click .RoleEdit': function (e, value, row, index) {
+        'click .EmployeeEdit': function (e, value, row, index) {
             alert('You click like action, row: ' + JSON.stringify(row));
         },
-        'click .RoleDel': function (e, value, row, index) {
+        'click .EmployeeDel': function (e, value, row, index) {
             //在数据库中删除
-            DeleteRole(row.ID);
-            $("#RoleListTable").bootstrapTable('remove', {
-                field: 'ID',
-                values: [row.ID]
-            });
-        },
-        'click .RolePermission': function (e, value, row, index) {
-            //向模态框中传值
-            $('#HiddenRoleID').val(row.ID);
-            $("#RolePermissionModal").on("hidden.bs.modal", function () {
-                $(this).removeData("bs.modal");
-            });
-            //权限列表
-            $.post("/System/GetOptionHtml?" + (new Date()).getTime(), { CurrentRoleID: row.ID }, function (data) {
-                $(this).removeData("bs.modal");
-                $("#ActionURLSelect").html(data);
-                //$('#test-select').treeMultiselect({ searchable: true })[0].reload();
-                if ($("#ActionURLSelect").treeMultiselect()) {
-                    $("#ActionURLSelect").treeMultiselect()[0].remove();
-
+            $.post("/System/DeleteEmployee", { ID: row.ID }, function (data) {
+                if (data.Status == "OK") {
+                    $("#EmployeeListTable").bootstrapTable('remove', {
+                        field: 'ID',
+                        values: [row.ID]
+                    });
+                    alert("删除成功！");
                 } else {
-                    $("#ActionURLSelect").treeMultiselect({ searchable: true });
+                    alert("删除失败!");
+                    return;
                 }
-            });
-
-            $("#RolePermissionModal").on('show.bs.modal', function () {//数据加载完成后删除loading
-                $("#RolePermissionModal").remove(".tree-multiselect");
-            });
-
-            //加载完html
-            $('#RolePermissionModal').modal("toggle");
-
-            $('#RolePermissionModal').on('hidden.bs.modal', function () {
-                window.location.reload();
-            });
-
-
-
-
+            }, "json");
+           
+        },
+        'click .haha': function (e, value, row, index) {
+            alert("什么事情也没有发生!");
         }
     };
-    function UpdateRoleColumn(role) {
-        $.post("/System/UpdateRole", { RoleModel: role }, function (data) {
+    function UpdateEmployeeColumn(emp) {       
+        emp.HireDate = changeDateFormat(emp.HireDate);
+        emp.FireDate = changeDateFormat(emp.FireDate);
+        emp.Birthday = changeDateFormat(emp.Birthday);
+     
+        $.post("/System/UpdateEmployee", { EmployeeModel: emp }, function (data) {
+           
             if (data.Status == "OK") {
+                $("#EmployeeListTable").bootstrapTable('refresh'),
                 alert("更新成功！");
             } else {
                 alert("更新失败！");
             }
         }, "json")
     }
-
     $(function () {
+        $("#AddEmployeeBtn").click(function () {
+            $("#form-add").submit();
+        })
+        $('.form_datetime').datetimepicker({
+            language: 'zh-CN',
+            format: 'yyyy-mm-dd',
+            todayHighlight: 1,
+            autoclose: 1,
+            todayBtn: 1,
+            minView: 1,
+            minuteStep: 3,
+        });
+        //邮箱自动填充
+        //初始化邮箱列表
+        var mail = new Array("qq.com", "163.com", "gmail.com", "sina.com", "126.com", "icloud.com", "vip.qq.com", "hotmail.com", "sohu.com", "139.com", "vip.sina.com");
+
+        //把邮箱列表加入下拉
+        for (var i = 0; i < mail.length; i++) {
+
+            var $liElement = $("<li class=\"autoli\"><span class=\"ex\"></span><span class=\"at\">@@</span><span class=\"step\">" + mail[i] + "</span></li>");
+            $liElement.appendTo("ul.autoul");
+        }
+        //下拉菜单初始隐藏
+        $(".autoul").hide();
+        $("#Email").keyup(function () { //点击邮箱
+            if (event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 13) {
+
+                //菜单展现，需要排除空格开头和"@@"开头
+                if ($.trim($(this).val()) != "" && $.trim(this.value).match(/^@@/) == null) {
+
+                    $(".autoul").show();
+                    //同时去掉原先的高亮，把第一条提示高亮
+                    if ($(".autoul li.lihover").hasClass("lihover")) {
+                        $(".autoul li.lihover").removeClass("lihover");
+                    }
+                    $(".autoul li:visible:eq(0)").addClass("lihover");
+                } else {//如果为空或者"@@"开头
+                    $(".autoul").hide();
+                    $(".autoul li:eq(0)").removeClass("lihover");
+                }
+
+                //把输入的字符填充进提示，有两种情况：1.出现"@@"之前，把"@@"之前的字符进行填充；2.出现第一次"@@"时以及"@@"之后还有字符时，不填充
+                //出现@之前
+                if ($.trim(this.value).match(/[^@@]@@/) == null) {//输入了不含"@@"的字符或者"@@"开头
+
+                    if ($.trim(this.value).match(/^@@/) == null) {
+                        //不以"@@"开头
+                        $(this).next().children("li").children(".ex").text($(this).val());
+                    }
+                } else {
+
+                    //输入字符后，第一次出现了不在首位的"@@"
+                    //当首次出现@之后，有2种情况：1.继续输入；2.没有继续输入
+                    //当继续输入时
+                    var str = this.value;//输入的所有字符
+                    var strs = new Array();
+                    strs = str.split("@@");//输入的所有字符以"@@"分隔
+                    $(".ex").text(strs[0]);//"@@"之前输入的内容
+                    var len = strs[0].length;//"@@"之前输入内容的长度
+                    if (this.value.length > len + 1) {
+
+                        //截取出@之后的字符串,@@之前字符串的长度加@的长度,从第(len+1)位开始截取
+                        var strright = str.substr(len + 1);
+
+                        //正则屏蔽匹配反斜杠"\"
+                        if (strright.match(/[\\]/) != null) {
+                            strright.replace(/[\\]/, "");
+                            return false;
+                        }
+
+                        //遍历li
+                        $("ul.autoul li").each(function () {
+
+                            //遍历span
+                            //$(this) li
+                            $(this).children("span.step").each(function () {
+
+                                //@@之后的字符串与邮件后缀进行比较
+                                //当输入的字符和下拉中邮件后缀匹配并且出现在第一位出现
+                                //$(this) span.step
+                                if ($("ul.autoul li").children("span.step").text().match(strright) != null && $(this).text().indexOf(strright) == 0) {
+                                    //class showli是输入框@@后的字符和邮件列表对比匹配后给匹配的邮件li加上的属性
+                                    $(this).parent().addClass("showli");
+                                    //如果输入的字符和提示菜单完全匹配，则去掉高亮和showli，同时提示隐藏
+                                    if (strright.length >= $(this).text().length) {
+                                        $(this).parent().removeClass("showli").removeClass("lihover").hide();
+                                    }
+                                } else {
+                                    $(this).parent().removeClass("showli");
+                                }
+                                if ($(this).parent().hasClass("showli")) {
+                                    $(this).parent().show();
+                                    $(this).parent("li").parent("ul").children("li.showli:eq(0)").addClass("lihover");
+                                } else {
+                                    $(this).parent().hide();
+                                    $(this).parent().removeClass("lihover");
+                                }
+                            });
+                        });
+                    } else {
+                        //"@@"后没有继续输入时
+                        $(".autoul").children().show();
+                        $("ul.autoul li").removeClass("showli");
+                        $("ul.autoul li.lihover").removeClass("lihover");
+                        $("ul.autoul li:eq(0)").addClass("lihover");
+                    }
+                }
+            }//有效输入按键事件结束
+            if (event.keyCode == 8 || event.keyCode == 46) {
+
+                $(this).next().children().removeClass("lihover");
+                $(this).next().children("li:visible:eq(0)").addClass("lihover");
+            }//删除事件结束
+            if (event.keyCode == 38) {
+                //使光标始终在输入框文字右边
+                $(this).val($(this).val());
+            }//方向键↑结束
+            if (event.keyCode == 13) {
+
+                if ($("ul.autoul li").is(".lihover")) {
+                    $("#Email").val($("ul.autoul li.lihover").children(".ex").text() + "@@" + $("ul.autoul li.lihover").children(".step").text());
+                }
+                $(".autoul").children().hide();
+                $(".autoul").children().removeClass("lihover");
+                $("#Email").focus();//回车后输入栏获得焦点
+            }
+            $(".autoli").click(function () {
+                $("#Email").val($(this).children(".ex").text() + $(this).children(".at").text() + $(this).children(".step").text());
+                $(".autoul").hide();
+            });
+            if (event.keyCode == 40) {
+
+                //当键盘按下↓时,如果已经有li处于被选中的状态,则去掉状态,并把样式赋给下一条(可见的)li
+                if ($("ul.autoul li").is(".lihover")) {
+
+                    //如果还存在下一条(可见的)li的话
+                    if ($("ul.autoul li.lihover").nextAll().is("li:visible")) {
+
+                        if ($("ul.autoul li.lihover").nextAll().hasClass("showli")) {
+
+                            $("ul.autoul li.lihover").removeClass("lihover")
+                                .nextAll(".showli:eq(0)").addClass("lihover");
+                        } else {
+
+                            $("ul.autoul li.lihover").removeClass("lihover").removeClass("showli")
+                                .next("li:visible").addClass("lihover");
+                            $("ul.autoul").children().show();
+                        }
+                    } else {
+
+                        $("ul.autoul li.lihover").removeClass("lihover");
+                        $("ul.autoul li:visible:eq(0)").addClass("lihover");
+                    }
+                }
+            }
+            if (event.keyCode == 38) {
+
+                //当键盘按下↓时,如果已经有li处于被选中的状态,则去掉状态,并把样式赋给下一条(可见的)li
+                if ($("ul.autoul li").is(".lihover")) {
+
+                    //如果还存在上一条(可见的)li的话
+                    if ($("ul.autoul li.lihover").prevAll().is("li:visible")) {
+
+
+                        if ($("ul.autoul li.lihover").prevAll().hasClass("showli")) {
+
+                            $("ul.autoul li.lihover").removeClass("lihover")
+                                .prevAll(".showli:eq(0)").addClass("lihover");
+                        } else {
+
+                            $("ul.autoul li.lihover").removeClass("lihover").removeClass("showli")
+                                .prev("li:visible").addClass("lihover");
+                            $("ul.autoul").children().show();
+                        }
+                    } else {
+
+                        $("ul.autoul li.lihover").removeClass("lihover");
+                        $("ul.autoul li:visible:eq(" + ($("ul.autoul li:visible").length - 1) + ")").addClass("lihover");
+                    }
+                } else {
+
+                    //当键盘按下↓时,如果之前没有一条li被选中的话,则第一条(可见的)li被选中
+                    $("ul.autoul li:visible:eq(" + ($("ul.autoul li:visible").length - 1) + ")").addClass("lihover");
+                }
+            }
+            $("ul.autoul li").hover(function () {
+
+                if ($("ul.autoul li").hasClass("lihover")) {
+
+                    $("ul.autoul li").removeClass("lihover");
+                }
+                $(this).addClass("lihover");
+            });
+            $("body").click(function () {
+                $(".autoul").hide();
+            });//鼠标点击document事件结束
+        });
         $.fn.editable.defaults.mode = 'inline'; //行内编辑
         $('#EmployeeListTable').bootstrapTable({
             url: '/System/GetAllEmployeeJson',
             method: 'post',
-            uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+            uniqueId: "ID",                     //每一行的唯一标识，一般为主键列           
+            pagination: true,
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+            pageSize: 18,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100], //如果设置了分页，设置可供选择的页面数据条数。设置为 All 或者 Unlimited  
+            queryParams: function (params) {
+                return {
+                    limit: params.limit,
+                    offset: params.offset,
+                    sortOrder: params.order,
+                    NickName: $(".search input").val(),                  
+                };
+            },
             columns: [
                 { checkbox: true },
                 {
-                field: 'ID',
-                title: '员工编号',
-                align: 'center',
-                sortable: true, rowspan: 1,
-
-            }, {
+                    field: 'ID',
+                    title: '员工编号',
+                    align: 'center',
+                    sortable: true,
+                    visible: false,
+                }, {
                     field: 'EmployeeName',
-                title: '员工帐号',
-                align: 'center',
-                sortable: true,
-                editable: {
-                    type: 'text',
-                    title: '角色名称',
-                    validate: function (value) {
-                        value = $.trim(value);
-                        if (!value) {
-                            return '角色名称不能为空';
-                        }
-                        var data = $("#RoleListTable").bootstrapTable('getData'),
-                            index = $(this).parents('tr').data('index');
-                        data[index].RoleName = value;
-                        //执行修改数据方法
-                        UpdateRoleColumn(data[index]);
-                        return '';
-                    }
+                    title: '帐号',
+                    align: 'center',
+                    sortable: true,
+
                 },
-            },
-            {
-                field: 'TelphoneNumber', title: '电话号码', align: 'center', sortable: true,
-                formatter: function (value, row, index) {
-                    if (value == "10") { return "超级管理员"; }
-                    else if (value == "100") { return "系统管理员"; }
-                    else if (value == "200") { return "公司管理"; }
-                    else if (value == "300") { return "普通员工"; }
-                    else { return "其它"; }
-                }
-            },        
+                {
+                    field: 'TelphoneNumber', title: '电话号码', align: 'center',
+
+                },
                 {
                     field: 'NickName',
                     title: '真实姓名',
                     align: 'center', sortable: true,
                     editable: {
-                        type: 'text'
-                    }
+                        type: 'text',
+                        validate: function (value) { //字段验证
+                            if (!value) return '真实姓名不能为空';
+                            var data = $("#EmployeeListTable").bootstrapTable('getData'),
+                                index = $(this).parents('tr').data('index');
+                            console.log(value);
+                            data[index].NickName = value;
+                            //执行修改数据方法
+                            UpdateEmployeeColumn(data[index]);
+                            return '';
+
+                        },
+                    },
                 },
-
-
                 {
                     field: 'Email',
                     title: '邮箱',
@@ -390,7 +629,33 @@
                     title: '部门',
                     align: 'center', sortable: true,
                     editable: {
-                        type: 'text'
+                        type: 'select',
+                        //source: [{ value: "1", text: "研发部" }, { value: "2", text: "销售部" }, { value: "3", text: "行政部" }]
+                        source: function () {
+                            var result = [];
+                            $.ajax({
+                                url: '/System/GetAllDepartmentsJson',
+                                async: false,
+                                type: "post",
+                                data: {},
+                                success: function (data) {
+                                    $.each(data, function (i, item) {
+                                        result.push({ value: item.ID, text: item.DepartmentName, selected: "selected" });
+                                    });
+                                }
+                            });
+                            return result;
+                        },
+                        validate: function (value) { //字段验证
+                            if (!value) return '用户名不能为空';
+                            var data = $("#EmployeeListTable").bootstrapTable('getData'),
+                                index = $(this).parents('tr').data('index');
+                            data[index].DepartmentID = value;
+                            //执行修改数据方法
+                            UpdateEmployeeColumn(data[index]);
+                            return '';
+
+                        },
                     }
                 },
 
@@ -401,16 +666,26 @@
                     align: 'center', sortable: true,
                     editable: {
                         type: 'text'
-                    }
+                    },
+                    visible: false,
                 },
-
-
                 {
                     field: 'Sex',
                     title: '性别',
                     align: 'center', sortable: true,
                     editable: {
-                        type: 'text'
+                        type: 'select',
+                        source: [{ value: "0", text: "女" }, { value: "1", text: "男" }, { value: "2", text: "保密" }],
+                        validate: function (value) { //字段验证
+                            if (!value) return '用户名不能为空';
+                            var data = $("#EmployeeListTable").bootstrapTable('getData'),
+                                index = $(this).parents('tr').data('index');
+                            data[index].Sex = value;
+                            //执行修改数据方法
+                            UpdateEmployeeColumn(data[index]);
+                            return '';
+
+                        },
                     }
                 },
 
@@ -425,12 +700,8 @@
                         } else {
                             return "";
                         }
-                        
-
                     },
-                    editable: {
-                        type: 'text'
-                    }
+
                 }, {
                     field: 'HireDate',
                     title: '入职日期',
@@ -453,18 +724,46 @@
                         } else {
                             return "";
                         }
-                       
+
                     },
+                    visible: false,
+
                     editable: {
                         type: 'text'
                     }
                 },
                 {
-                    field: 'Position',
+                    field: 'PositionID',
                     title: '职位',
                     align: 'center', sortable: true,
                     editable: {
-                        type: 'text'
+                        type: 'select',
+                        source: function () {
+                            var result = [];
+                            $.ajax({
+                                url: '/System/GetAllPositionJson',
+                                async: false,
+                                type: "post",
+                                data: {},
+                                success: function (data) {
+                                    $.each(data, function (i, item) {
+                                        result.push({ value: item.ID, text: item.PositionName, selected: "selected" });
+                                    });
+                                }
+                            });
+                            return result;
+                        },
+                        validate: function (value) { //字段验证
+                            if (!value) return '用户名不能为空';
+                            var data = $("#EmployeeListTable").bootstrapTable('getData'),
+                                index = $(this).parents('tr').data('index');
+                            data[index].PositionID = value;
+                            //执行修改数据方法
+                            UpdateEmployeeColumn(data[index]);
+                            return '';
+
+                        },
+
                     }
                 },
                 {
@@ -481,50 +780,76 @@
                     align: 'center', sortable: true,
                     editable: {
                         type: 'text'
-                    }
+                    },
+                    visible: false,
+
                 },
                 {
                     field: 'Status',
                     title: '启用',
                     align: 'center', sortable: true,
                     editable: {
-                        type: 'text'
-                    }
-                },
+                        type: 'select',
+                        source: [{ value: "0", text: "禁用" }, { value: "1", text: "启用" }],
+                        validate: function (value) { //字段验证
+                            if (!value) return '用户名不能为空';
+                            var data = $("#EmployeeListTable").bootstrapTable('getData'),
+                                index = $(this).parents('tr').data('index');
+                            if (value == "0") {
+                                data[index].Status == "false";
+                            } else {
+                                data[index].Status = "true";
+                            }
+                            //执行修改数据方法
+                            UpdateEmployeeColumn(data[index]);
+                            return '';
 
-            {
-                field: '', title: '操作', align: 'center',
-
-                formatter: function () {
-                    return [
-                        '<a class="RolePermission" href="javascript:void(0)" title="分配权限">',
-                        '<i class="glyphicon glyphicon-lock"></i>',
-                        '</a>  ',
-                        '<a class="RoleEdit" href="javascript:void(0)" title="修改">',
-                        '<i class="glyphicon glyphicon-edit"></i>',
-                        '</a>  ',
-                        '<a class="RoleDel" href="javascript:void(0)" title="删除">',
-                        '<i class="glyphicon glyphicon-trash"></i>',
-                        '</a>'
-                    ].join('');
+                        },
+                    },
 
                 },
-                events: OperateEvents
-            }
+
+                {
+                    field: '', title: '操作', align: 'center',
+
+                    formatter: function () {
+                        return [
+                            '<a class="haha" href="javascript:void(0)" title="分配权限">',
+                            '<i class="glyphicon glyphicon-lock"></i>',
+                            '</a>  ',
+                            '<a class="EmployeeEdit" href="javascript:void(0)" title="修改">',
+                            '<i class="glyphicon glyphicon-edit"></i>',
+                            '</a>  ',
+                            '<a class="EmployeeDel" href="javascript:void(0)" title="删除">',
+                            '<i class="glyphicon glyphicon-trash"></i>',
+                            '</a>'
+                        ].join('');
+
+                    },
+                    events: OperateEvents
+                }
 
             ],
-            pagination: true,
-            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
-            pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
-            pageSize: 18,                       //每页的记录行数（*）
-            pageList: [10, 25, 50, 100], //如果设置了分页，设置可供选择的页面数据条数。设置为 All 或者 Unlimited
-
         });
+        
+        //批量删除
+        $("#DelSelectedEmployee").click(function () {
+            var rows = $('#EmployeeListTable').bootstrapTable('getAllSelections');
+            var SelectedIDs = [];
+            $.map(rows, function (item) {
+                SelectedIDs.push(item.ID);
+            });
+            $.post("/System/DeleteEmployees", { IDs: SelectedIDs }, function (data) {
+                if (data.Status == "OK") {
+                    alert(data.Message);
+                    $("#EmployeeListTable").bootstrapTable('remove', { field: 'ID', values: SelectedIDs });                  
+                } else {
+                    alert("删除失败!错误信息：" + data.Message);
+                }
+            }, "json")
+
+        })
     })
-
-
-
-
 </script>
 
 

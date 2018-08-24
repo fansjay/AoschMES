@@ -17,5 +17,5 @@ namespace Aosch.MES.IDAL
     public interface ILogDAL : IBaseDAL<Log> { }
     public interface IEmployeeDAL : IBaseDAL<Employee> { }
 
-
+   
 }

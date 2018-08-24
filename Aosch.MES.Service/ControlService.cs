@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Aosch.MES.IService;
@@ -199,14 +200,55 @@ namespace Aosch.MES.Service
 
     public class EmployeeService : BaseService<Employee>, IEmployeeService
     {
+        public bool DeleteEmployeeByID(int EmpID)
+        {
+           return  CurrentDBSession.ExcuteSQL("Delete Employee where ID=@ID", new SqlParameter("@ID", EmpID))>0;
+        }
+
         public bool ExistEntity(int ID)
         {
             return CurrentDBSession.EmployeeDal.LoadEntities(a => a.ID == ID).Count() > 0;
+        }
+
+        public Department GetDepartment(int ID)
+        {
+          return   CurrentDBSession.ExcuteQuery<Department>($"SELECT * FROM Department WHERE ID=@ID", new SqlParameter("@ID", ID)).FirstOrDefault();
+        }
+
+        public List<Department> GetDepartments(bool IncludeDisabled=true)
+        {
+
+            string Sqlstring = "";
+            if (IncludeDisabled)
+            {
+                Sqlstring = "SELECT * FROM Department";
+            }
+            else
+            {
+                Sqlstring = "select * from Department where Status=1";
+            }
+            return CurrentDBSession.ExcuteQuery<Department>(Sqlstring);
+        }
+
+        public List<Position> GetPositions(bool IncludeDisabled = true)
+        {
+            string Sqlstring = "";
+            if (IncludeDisabled)
+            {
+                Sqlstring = "SELECT * FROM Position";
+            }
+            else
+            {
+                Sqlstring = "select * from Position where Status=1";
+            }
+            return CurrentDBSession.ExcuteQuery<Position>(Sqlstring);
         }
 
         public override void SetCurrentDAL()
         {
             CurrentDAL = this.CurrentDBSession.EmployeeDal;
         }
+
+     
     }
 }

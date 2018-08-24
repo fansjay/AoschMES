@@ -13,7 +13,7 @@
         <EntityTypeShape EntityType="Aosch.MES.Model.RoleActionURL_Mapping" Width="1.5" PointX="8.625" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Aosch.MES.Model.ActionURL" Width="1.5" PointX="10.875" PointY="1.25" />
         <EntityTypeShape EntityType="Aosch.MES.Model.Log" Width="1.5" PointX="3.375" PointY="4.75" />
-        <EntityTypeShape EntityType="Aosch.MES.Model.Employee" Width="1.5" PointX="13" PointY="1.25" />
+        <EntityTypeShape EntityType="Aosch.MES.Model.Employee" Width="1.5" PointX="13.125" PointY="1.375" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -26,7 +26,7 @@ namespace Aosch.MES.Model
         public System.DateTime Birthday { get; set; }
         public System.DateTime HireDate { get; set; }
         public Nullable<System.DateTime> FireDate { get; set; }
-        public string Position { get; set; }
+        public int PositionID { get; set; }
         public string IDCardNumber { get; set; }
         public string RecordAccount { get; set; }
         public bool Status { get; set; }

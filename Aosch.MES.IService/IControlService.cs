@@ -31,7 +31,15 @@ namespace Aosch.MES.IService
     }
 
     public interface ILogService : IBaseService<Log> { }
-    public interface IEmployeeService : IBaseService<Employee> { }
+    public interface IEmployeeService : IBaseService<Employee>
+    {
+        List<Department> GetDepartments(bool IncludeDisabled=true);
+        List<Position> GetPositions(bool IncludeDisabled = true);
+
+        Department GetDepartment(int ID);
+
+        bool DeleteEmployeeByID(int EmpID);
+    }
 
 
    

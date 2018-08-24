@@ -18,15 +18,11 @@ namespace Aosch.MES.Model
         public string Username { get; set; }
         public string Password { get; set; }
         public int RoleID { get; set; }
-        public int DepartmentID { get; set; }
-        public int GroupID { get; set; }
         public int EmployeeID { get; set; }
         public int ICNumber { get; set; }
-        public string NickName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
         public string HomePage { get; set; }
         public System.DateTime RegisterTime { get; set; }
         public string Description { get; set; }
+        public bool Status { get; set; }
     }
 }

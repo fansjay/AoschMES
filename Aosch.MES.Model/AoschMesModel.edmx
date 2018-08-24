@@ -13,16 +13,12 @@
           <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="RoleID" Type="int" Nullable="false" />
-          <Property Name="DepartmentID" Type="int" Nullable="false" />
-          <Property Name="GroupID" Type="int" Nullable="false" />
           <Property Name="EmployeeID" Type="int" Nullable="false" />
           <Property Name="ICNumber" Type="int" Nullable="false" />
-          <Property Name="NickName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="80" Nullable="false" />
-          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="HomePage" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="RegisterTime" Type="datetime" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ActionURL">
           <Key>
@@ -62,6 +58,7 @@
           <Property Name="DepartmentName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="DepartmentType" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Staus" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -79,7 +76,7 @@
           <Property Name="Birthday" Type="date" Nullable="false" />
           <Property Name="HireDate" Type="date" Nullable="false" />
           <Property Name="FireDate" Type="date" />
-          <Property Name="Position" Type="nvarchar" MaxLength="50" />
+          <Property Name="PositionID" Type="int" Nullable="false" />
           <Property Name="IDCardNumber" Type="nvarchar" MaxLength="18" />
           <Property Name="RecordAccount" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Status" Type="bit" Nullable="false" />
@@ -101,9 +98,10 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PositionName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -145,16 +143,12 @@
           <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RoleID" Type="Int32" Nullable="false" />
-          <Property Name="DepartmentID" Type="Int32" Nullable="false" />
-          <Property Name="GroupID" Type="Int32" Nullable="false" />
           <Property Name="EmployeeID" Type="Int32" Nullable="false" />
           <Property Name="ICNumber" Type="Int32" Nullable="false" />
-          <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="HomePage" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RegisterTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -179,6 +173,7 @@
           <Property Name="DepartmentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DepartmentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Staus" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Position">
           <Key>
@@ -187,6 +182,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="PositionName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -259,7 +255,7 @@
           <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="HireDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="FireDate" Type="DateTime" Precision="0" />
-          <Property Name="Position" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PositionID" Type="Int32" Nullable="false" />
           <Property Name="IDCardNumber" Type="String" MaxLength="18" FixedLength="false" Unicode="true" />
           <Property Name="RecordAccount" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
@@ -274,17 +270,13 @@
     <EntitySetMapping Name="Account">
       <EntityTypeMapping TypeName="IsTypeOf(Aosch.MES.Model.Account)">
         <MappingFragment StoreEntitySet="Account">
-          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Username" ColumnName="Username" />
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
           <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
           <ScalarProperty Name="ICNumber" ColumnName="ICNumber" />
-          <ScalarProperty Name="NickName" ColumnName="NickName" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
           <ScalarProperty Name="HomePage" ColumnName="HomePage" />
           <ScalarProperty Name="RegisterTime" ColumnName="RegisterTime" />
           <ScalarProperty Name="Description" ColumnName="Description" />
@@ -310,7 +302,8 @@
     <EntitySetMapping Name="Department">
       <EntityTypeMapping TypeName="IsTypeOf(Aosch.MES.Model.Department)">
         <MappingFragment StoreEntitySet="Department">
-          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Staus" ColumnName="Staus" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
           <ScalarProperty Name="DepartmentType" ColumnName="DepartmentType" />
           <ScalarProperty Name="Description" ColumnName="Description" />
@@ -320,7 +313,8 @@
     <EntitySetMapping Name="Position">
       <EntityTypeMapping TypeName="IsTypeOf(Aosch.MES.Model.Position)">
         <MappingFragment StoreEntitySet="Position">
-          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="PositionName" ColumnName="PositionName" />
           <ScalarProperty Name="Description" ColumnName="Description" />
         </MappingFragment>
@@ -381,7 +375,7 @@
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="RecordAccount" ColumnName="RecordAccount" />
                 <ScalarProperty Name="IDCardNumber" ColumnName="IDCardNumber" />
-                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="PositionID" ColumnName="PositionID" />
                 <ScalarProperty Name="FireDate" ColumnName="FireDate" />
                 <ScalarProperty Name="HireDate" ColumnName="HireDate" />
                 <ScalarProperty Name="Birthday" ColumnName="Birthday" />

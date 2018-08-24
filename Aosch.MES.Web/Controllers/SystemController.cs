@@ -9,22 +9,21 @@ using System.Web.Mvc;
 
 namespace Aosch.MES.Web.Controllers
 {
+
+    [LoginFilterAcctribute]
     public class SystemController : Controller
     {
         log4net.ILog logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private RoleService roleService = new RoleService();
         private LogService logService = new LogService();
         private EmployeeService employeeService = new EmployeeService();
+        private AccountService accountService = new AccountService();
         // GET: System
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult RolePermission()
-        {
-            return View();
-        }
 
         public ActionResult Roles()
         {
@@ -35,13 +34,57 @@ namespace Aosch.MES.Web.Controllers
             return View();
         }
 
-        public ActionResult GetAllRoleJson(int? limit, int? offset, string order)
+     
+
+        #region 系统用户管理 
+        public ActionResult Account()
+        {
+            //角色
+            var Roles = roleService.LoadEntities(a => a.ID > 0).ToList();
+            var rolelist = new List<SelectListItem>();
+            foreach (var item in Roles)
+            {
+                rolelist.Add(new SelectListItem() { Value = item.ID.ToString(), Text = item.RoleName });
+            }
+            //ViewBag.RoleSelectList = new List<SelectListItem>() { new SelectListItem() { Value = "0", Text = "禁用" }, new SelectListItem() { Value = "1", Text = "启用", Selected = true } };
+            ViewBag.RoleSelectList = rolelist;
+
+            //帐号
+            var usernames = employeeService.LoadEntities(a => a.ID > 0).ToList();
+            var usernamelist = new List<SelectListItem>();
+            foreach (var item in usernames)
+            {
+                usernamelist.Add(new SelectListItem() {Text=item.NickName,Value=item.EmployeeName });
+            }
+            ViewBag.EmployeeSelectList = usernamelist;
+
+            //是否启用
+           ViewBag.StatusSelectList = new List<SelectListItem>() { new SelectListItem() { Value = "0", Text = "禁用" }, new SelectListItem() { Value = "1", Text = "启用", Selected = true } };
+
+
+            return View();
+        }
+
+        public ActionResult GetAllAccountJson(int? limit, int? offset, string order)
         {
             if (string.IsNullOrEmpty(order)) order = "asc";
             int TotalCount = 0;
-            var AllRole = roleService.LoadEntities((int)offset, (int)limit, out TotalCount, (r => r.ID > 0), (r => new { r.ID }), "asc".Equals(order) ? false : true);
-            return Json(new { total = TotalCount, rows = AllRole }, JsonRequestBehavior.AllowGet);
+            var AllAccounts = accountService.LoadEntities((int)offset, (int)limit, out TotalCount, (r => r.ID > 0), (r => new { r.ID }), "asc".Equals(order) ? false : true);
+            return Json(new { total = TotalCount, rows = AllAccounts }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult AddAccount()
+        {
+            return Json(new { Status = "ERROR" });
+        }
+
+        public ActionResult DeleteAccount()
+        {
+            return Json(new { Status = "ERROR" });
+        }
+
+
+        #endregion
 
         #region 角色管理
         [HttpPost]
@@ -90,6 +133,20 @@ namespace Aosch.MES.Web.Controllers
                 }
             }
             return Json(new { Status = "Error" });
+        }
+
+
+        public ActionResult GetAllRoleJson(int? limit, int? offset, string order)
+        {
+            if (string.IsNullOrEmpty(order)) order = "asc";
+            int TotalCount = 0;
+            var AllRole = roleService.LoadEntities((int)offset, (int)limit, out TotalCount, (r => r.ID > 0), (r => new { r.ID }), "asc".Equals(order) ? false : true);
+            return Json(new { total = TotalCount, rows = AllRole }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetAllRoleSelectJson()
+        {
+            return Json(roleService.LoadEntities(a => a.ID > 0).ToList());
         }
 
 
@@ -205,21 +262,70 @@ namespace Aosch.MES.Web.Controllers
         #region 员工管理
         public ActionResult Employees()
         {
-            ViewBag.StatusList = new List<SelectListItem>() { new SelectListItem() { Value = "0", Text = "禁用" }, new SelectListItem() { Value = "1", Text = "启用",Selected=true} };
-            ViewBag.SexList = new List<SelectListItem>() { new SelectListItem() { Value = "0", Text = "女" }, new SelectListItem() { Value = "1", Text = "男", Selected = true } };
+
+            ViewBag.StatusList = new List<SelectListItem>() { new SelectListItem() { Value = "false", Text = "禁用" }, new SelectListItem() { Value = "true", Text = "启用",Selected=true} };
+            ViewBag.SexList = new List<SelectListItem>() { new SelectListItem() { Value = "0", Text = "女" }, new SelectListItem() { Value = "1", Text = "男"},new SelectListItem() { Value = "2", Text = "保密", Selected = true } };
+            var DepartmentList = new List<SelectListItem>();
+            var departments= employeeService.GetDepartments();
+            foreach (var item in departments)
+            {
+                DepartmentList.Add(new SelectListItem() {Text=item.DepartmentName,Value=item.ID.ToString() });
+            }
+            ViewBag.DepartmentsList = DepartmentList;
+
+            var Positions = employeeService.GetPositions();
+            var PositionList = new List<SelectListItem>();
+            foreach (var item in Positions)
+            {
+                PositionList.Add(new SelectListItem() {Text=item.PositionName,Value=item.ID.ToString() });
+            }
+            ViewBag.PositionsList = PositionList;
+
             return View();
         }
 
-        public ActionResult GetAllEmployeeJson(int? limit, int? offset, string order)
+        public ActionResult GetAllEmployeeJson(int? limit, int? offset, string order,string NickName)
         {
             if (string.IsNullOrEmpty(order)) order = "asc";
             int TotalCount = 0;
-            var employees = employeeService.LoadEntities((int)offset, (int)limit, out TotalCount, (r => r.ID > 0), (r => new { r.ID }), "asc".Equals(order) ? false : true);
+            var employees = employeeService.LoadEntities((int)offset, (int)limit, out TotalCount, (r => r.ID > 0&&r.NickName.Contains(NickName)), (r => new { r.ID }), "asc".Equals(order) ? false : true);
             return Json(new { total = TotalCount, rows = employees }, JsonRequestBehavior.AllowGet);
         }
 
+
+
+        [HttpPost]
+        public ActionResult GetAllDepartmentsJson()
+        {
+            return Json(employeeService.GetDepartments());
+        }
+
+        [HttpPost]
+        public ActionResult GetAllPositionJson()
+        {
+            return Json(employeeService.GetPositions());
+        }
+
+        [HttpPost]
+        public ActionResult GetDepartmentNameByID(int DepartmentID)
+        {
+           var d= employeeService.GetDepartment(DepartmentID);
+            if (d != null)
+            {
+                return Content(d.DepartmentName);
+            }
+            return Content("");
+        }
+
+        [HttpPost]
         public ActionResult AddEmployee(Employee employee)
         {
+            employee.Address=string.IsNullOrEmpty(employee.Address)? "" : employee.Address;
+            employee.Description = string.IsNullOrEmpty(employee.Description) ? "" : employee.Description;
+            employee.IDCardNumber = string.IsNullOrEmpty(employee.IDCardNumber) ? "" : employee.IDCardNumber;
+            employee.RecordAccount = CookieHelper.GetCurrentAccount().Username;
+            employee.FireDate = DateTime.Parse("1900-01-01");
+
             if (employeeService.AddEntity(employee) != null)
             {
                 return Json(new { Status = "OK", Message = "" });
@@ -227,6 +333,64 @@ namespace Aosch.MES.Web.Controllers
             return Json(new { Status = "Error",Message="" });
         }
 
+        public ActionResult GetEmployeeDetailByID(int EmployeeID)
+        {
+            return Json(employeeService.LoadEntities(a=>a.ID==EmployeeID).FirstOrDefault());
+        }
+
+        [HttpPost]
+        public ActionResult UpdateEmployee(Employee EmployeeModel)
+        {
+            EmployeeModel.Address = string.IsNullOrEmpty(EmployeeModel.Address) ? "" : EmployeeModel.Address;
+            EmployeeModel.Description = string.IsNullOrEmpty(EmployeeModel.Description) ? "" : EmployeeModel.Description;
+            EmployeeModel.IDCardNumber = string.IsNullOrEmpty(EmployeeModel.IDCardNumber) ? "" : EmployeeModel.IDCardNumber;
+            EmployeeModel.RecordAccount = CookieHelper.GetCurrentAccount().Username;
+            EmployeeModel.FireDate = DateTime.Parse("1900-01-01");
+
+            if (employeeService.UpdateEntity(EmployeeModel))
+            {
+                return Json(new { Status = "OK", Message = "" });
+            }
+            return Json(new { Status = "Error", Message = "" });
+        }
+
+        [HttpPost]
+        public ActionResult DeleteEmployee(int ID)
+        {
+            if (employeeService.ExistEntity(ID))
+            {
+                if (employeeService.DeleteEmployeeByID(ID))
+                {
+                    return Json(new { Status = "OK", Message = "" });
+                }
+            }
+            return Json(new { Status = "Error", Message = "" });
+        }
+
+        [HttpPost]
+        public ActionResult DeleteEmployees(int []IDs)
+        {
+            int IDSCount = IDs.Length;
+            int DeletedIDCount = 0;
+            foreach (var ID in IDs)
+            {
+                if (employeeService.ExistEntity(ID))
+                {
+                    var employee = employeeService.LoadEntities(a => a.ID == ID).FirstOrDefault();
+                    if (employeeService.DeleteEntity(employee))
+                    {
+                        logger.Warn($"用户{CookieHelper.GetCurrentAccount().Username}-> 删除员工ID为{employee.ID},姓名为{employee.NickName}，的{employeeService.GetDepartment(employee.DepartmentID)}员工！\n");
+                        DeletedIDCount++;
+                    }
+                }
+            }
+
+            if (IDSCount == DeletedIDCount)
+            {
+                return Json(new { Status = "OK", Message = $"成功删除{DeletedIDCount}个员工！" });
+            }
+            return Json(new { Status = "Error", Message = $"成功删除{DeletedIDCount}个员工,其中{IDSCount - DeletedIDCount}个删除失败！" });
+        }
 
         #endregion
 

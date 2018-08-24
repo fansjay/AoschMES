@@ -1500,6 +1500,7 @@
     <Content Include="Content\AdminLTE\Ionicons\src\wrench.svg" />
     <Content Include="Content\AdminLTE\Ionicons\src\xbox.svg" />
     <Content Include="Content\AdminLTE\skins\_all-skins.min.css" />
+    <Content Include="Content\Bootstrap-Datepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\Bootstrap-Table\Bootstrap-Editable\bootstrap-editable.css" />
     <Content Include="Content\Bootstrap-Table\img\clear.png" />
     <Content Include="Content\Bootstrap-Table\img\loading.gif" />
@@ -1696,6 +1697,8 @@
     <Content Include="Content\AdminLTE\less\utilities.less" />
     <Content Include="Content\AdminLTE\less\variables.less" />
     <Content Include="Content\AdminLTE\less\wells.less" />
+    <Content Include="Scripts\Bootstrap-Datepicker\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\Bootstrap-Datepicker\bootstrap-datetimepicker.zh-CN.js" />
     <Content Include="Scripts\Bootstrap-Table\Bootstrap-Editable\bootstrap-editable.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\Highcharts-6.1.0\code\css\highcharts.scss" />
@@ -2383,6 +2386,7 @@
     <Content Include="Views\Home\Home.cshtml" />
     <Content Include="Views\System\Logs.cshtml" />
     <Content Include="Views\System\Employees.cshtml" />
+    <Content Include="Views\System\Account.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
