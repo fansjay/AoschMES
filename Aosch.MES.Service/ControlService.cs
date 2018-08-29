@@ -17,7 +17,7 @@ namespace Aosch.MES.Service
         public Account Login(string Username, string Password)
         {
             Account account = new Account();
-            var accounts= CurrentDBSession.AccountDal.LoadEntities(a => a.Username == Username && a.Password == Password);
+            var accounts= CurrentDBSession.AccountDal.LoadEntities(a => a.Username == Username && a.Password == Password&&a.Status);
             foreach (var item in accounts)
             {
                 if (item != null)
@@ -35,6 +35,11 @@ namespace Aosch.MES.Service
         public override void SetCurrentDAL()
         {
             CurrentDAL = this.CurrentDBSession.AccountDal;
+        }
+
+        public bool DeleteEntityByID(int ID)
+        {
+           return CurrentDBSession.ExcuteSQL("DELETE Account WHERE ID=@ID", new SqlParameter("@ID", ID)) > 0;
         }
     }
 
@@ -168,7 +173,6 @@ namespace Aosch.MES.Service
                 //二级菜单
                 if (item.ParentID!= 0&&item.IsRoot&&item.Showable)
                 {
-
                     //根菜单名称
                     var RootName = ActionURLs.Where(a => a.ID == item.ParentID).FirstOrDefault().MenuName;
 

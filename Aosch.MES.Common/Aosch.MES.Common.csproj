@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="CookieHelper.cs" />
+    <Compile Include="CommonUtil.cs" />
     <Compile Include="EnumClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

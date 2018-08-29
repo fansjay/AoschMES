@@ -1,10 +1,12 @@
 ﻿using Aosch.MES.Common;
 using Aosch.MES.Model;
 using Aosch.MES.Service;
+using Aosch.MES.Web.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace Aosch.MES.Web.Controllers
@@ -27,8 +29,6 @@ namespace Aosch.MES.Web.Controllers
 
         public ActionResult Roles()
         {
-
-
             ViewBag.RoleLevelList = new List<SelectListItem>() {new SelectListItem() { Value = "10", Text = "超级管理员" },new SelectListItem() { Value = "100", Text = "系统管理" }, new SelectListItem() { Value = "200", Text = "公司管理" },new SelectListItem() { Value = "300", Text = "普通员工",Selected=true } };
             
             return View();
@@ -73,16 +73,80 @@ namespace Aosch.MES.Web.Controllers
             return Json(new { total = TotalCount, rows = AllAccounts }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AddAccount()
+        [HttpPost]
+        public ActionResult AddAccount([Bind(Exclude = "Repassword")] Account account)
         {
+            Regex PasswordRegex = new Regex("^[a-zA-Z0-9]{6,12}$");
+
+
+            //密码不为空
+            if (!string.IsNullOrEmpty(account.Password))
+            {
+                if (!PasswordRegex.IsMatch(account.Password))
+                {
+                    return Json(new { Status = "ERROR", Message = "密码必须为6~12有效字母和数字组合" });
+                }
+            }
+            else
+            {
+                account.Password = "123456";
+            }
+            account.Password =EncryptUtil.Base64(account.Password);
+            account.HomePage = account.HomePage ?? "";
+            var no = 0;
+            int.TryParse(Request["ICnumber"], out no);
+            account.ICNumber = accountService.LoadEntities(a => a.ID > 0).OrderByDescending(a => a.ICNumber).First().ICNumber + 1;
+            account.Description = account.Description ?? "";
+            account.RegisterTime = DateTime.Now;
+            account.EmployeeID = employeeService.LoadEntities(e => e.EmployeeName ==account.Username).FirstOrDefault().ID;           
+            if (accountService.AddEntity(account) != null)
+            {
+                var emp = employeeService.LoadEntities(a => a.EmployeeName == account.Username).FirstOrDefault();
+                var role = roleService.LoadEntities(a => a.ID == account.RoleID).FirstOrDefault();
+                logger.Warn($"用户{CookieHelper.GetCurrentAccount().Username}-> 添加系统帐号为{account.Username},姓名为{emp.NickName} 角色为{role.RoleName}，的{employeeService.GetDepartment(emp.DepartmentID).DepartmentName} 的系统帐号！\n");
+                return Json(new { Status = "OK" });
+            }
+         
             return Json(new { Status = "ERROR" });
         }
 
-        public ActionResult DeleteAccount()
+        [HttpPost]
+        [HandlerPermission(false)]
+        public ActionResult DeleteAccount(int ID)
         {
-            return Json(new { Status = "ERROR" });
+            if (accountService.ExistEntity(ID))
+            {
+                if (accountService.DeleteEntityByID(ID))
+                {
+                    return Json(new { Status = "OK" });
+                }
+                else
+                {
+                    return Json(new { Status = "ERROR", Message = "帐户删除失败，请刷新后重新尝试！" });
+                }
+            }
+
+            return Json(new { Status = "ERROR",Message="帐户已经删除，或者不存在。请刷新后重新尝试！" });
         }
 
+        public ActionResult UpdateAccount(Account AccountModel)
+        {
+
+            AccountModel.Description = AccountModel.Description ?? "";
+            AccountModel.HomePage = AccountModel.HomePage ?? "";
+            if (ModelState.IsValid)
+            {
+                if (accountService.UpdateEntity(AccountModel))
+                {
+                    return Json(new { Status = "OK" });
+                }
+                else
+                {
+                    return Json(new { Status = "ERROR", Message = "帐户更新失败，请刷新后重新尝试！" });
+                }
+            }
+            return Json(new { Status = "ERROR", Message = "帐户已经删除，或者不存在。请刷新后重新尝试！" });
+        }
 
         #endregion
 
@@ -120,6 +184,7 @@ namespace Aosch.MES.Web.Controllers
         }
 
         [HttpPost]
+        [HandlerPermission(false)]
         public ActionResult DeleteRole(int ID)
         {
             if (roleService.ExistEntity(ID))
@@ -167,6 +232,7 @@ namespace Aosch.MES.Web.Controllers
         /// <param name="RoleID"></param>
         /// <returns></returns>
         [HttpPost]
+        [HandlerPermission(false)]
         public ActionResult AssignPermissions(int RoleID, int[] ActionIDs)
         {
             var IDsList = ActionIDs.ToList();
@@ -218,6 +284,7 @@ namespace Aosch.MES.Web.Controllers
             return Json(new { total = TotalCount, rows = AllLogs }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
+        [HandlerPermission(false)]
         public ActionResult DeleteLog(int ID)
         {
             if (logService.ExistEntity(ID))
@@ -232,6 +299,7 @@ namespace Aosch.MES.Web.Controllers
             return Json(new { Status = "Error" });
         }
         [HttpPost]
+        [HandlerPermission(false)]
         public ActionResult DeleteLogs(int [] IDs)
         {
             int IDSCount = IDs.Length;
@@ -320,12 +388,11 @@ namespace Aosch.MES.Web.Controllers
         [HttpPost]
         public ActionResult AddEmployee(Employee employee)
         {
-            employee.Address=string.IsNullOrEmpty(employee.Address)? "" : employee.Address;
-            employee.Description = string.IsNullOrEmpty(employee.Description) ? "" : employee.Description;
-            employee.IDCardNumber = string.IsNullOrEmpty(employee.IDCardNumber) ? "" : employee.IDCardNumber;
+            employee.Address = employee.Address ?? "";
+            employee.Description = employee.Description??"";
+            employee.IDCardNumber =employee.IDCardNumber??"";
             employee.RecordAccount = CookieHelper.GetCurrentAccount().Username;
             employee.FireDate = DateTime.Parse("1900-01-01");
-
             if (employeeService.AddEntity(employee) != null)
             {
                 return Json(new { Status = "OK", Message = "" });
@@ -341,12 +408,11 @@ namespace Aosch.MES.Web.Controllers
         [HttpPost]
         public ActionResult UpdateEmployee(Employee EmployeeModel)
         {
-            EmployeeModel.Address = string.IsNullOrEmpty(EmployeeModel.Address) ? "" : EmployeeModel.Address;
-            EmployeeModel.Description = string.IsNullOrEmpty(EmployeeModel.Description) ? "" : EmployeeModel.Description;
-            EmployeeModel.IDCardNumber = string.IsNullOrEmpty(EmployeeModel.IDCardNumber) ? "" : EmployeeModel.IDCardNumber;
+            EmployeeModel.Address= EmployeeModel.Address??"";
+            EmployeeModel.Description =EmployeeModel.Description??"";
+            EmployeeModel.IDCardNumber =EmployeeModel.IDCardNumber??"";
             EmployeeModel.RecordAccount = CookieHelper.GetCurrentAccount().Username;
             EmployeeModel.FireDate = DateTime.Parse("1900-01-01");
-
             if (employeeService.UpdateEntity(EmployeeModel))
             {
                 return Json(new { Status = "OK", Message = "" });
@@ -355,6 +421,7 @@ namespace Aosch.MES.Web.Controllers
         }
 
         [HttpPost]
+        [HandlerPermission(false)]
         public ActionResult DeleteEmployee(int ID)
         {
             if (employeeService.ExistEntity(ID))
@@ -368,6 +435,7 @@ namespace Aosch.MES.Web.Controllers
         }
 
         [HttpPost]
+        [HandlerPermission(false)]
         public ActionResult DeleteEmployees(int []IDs)
         {
             int IDSCount = IDs.Length;
@@ -424,5 +492,13 @@ namespace Aosch.MES.Web.Controllers
         }
         #endregion
 
+        #region 系统配置
+
+      
+        public ActionResult Config()
+        {
+            return View();
+        }
+        #endregion
     }
 }

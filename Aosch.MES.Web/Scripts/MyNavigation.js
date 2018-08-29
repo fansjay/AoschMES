@@ -36,7 +36,7 @@ $(function () {
    
     //$("#signuser").html('欢迎您,' + getCookieCN('username'));
     //var userid = getCookie('userid');
-        getNavigationFansjay();
+    getNavigationFansjay(getCookie("Username"));
 });
 
 
@@ -96,10 +96,10 @@ function tabEvent() {
     });
 }
 //testdemo
-function getNavigationFansjay() {
+function getNavigationFansjay(username) {
     //var rolename = getCookieCN('rolename');
     //var Username = 'admin';
-    $.getJSON("/Home/GetNavigationsFansjay?Username=admin", function (data) {
+    $.getJSON("/Home/GetNavigationsFansjay?Username=" + username, function (data) {
         var FirstLevelHtml = "";
         $.each(data, function (i, item) {
             if (item != null) {

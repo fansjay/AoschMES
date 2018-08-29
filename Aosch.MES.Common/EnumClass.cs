@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +9,14 @@ namespace Aosch.MES.Common
 {
     public enum LogType
     {
+        [Description("普通日志")]
         Info=0x000,
-        Warning=0x001,
-        Error=0x002,
-        Fatal=0x003
+        [Description("警告日志")]
+        Warning =0x001,
+        [Description("错误日志")]
+        Error =0x002,
+        [Description("致使错误日志")]
+        Fatal =0x003
     }
 
 

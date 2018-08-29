@@ -1,4 +1,5 @@
-﻿using Aosch.MES.Service;
+﻿using Aosch.MES.Common;
+using Aosch.MES.Service;
 using Newtonsoft.Json;
 using System;
 using System.Reflection;
@@ -14,6 +15,7 @@ namespace Aosch.MES.Web.Controllers
         // GET: Login
         public ActionResult Index()
         {
+            logger.Info(EncryptUtil.Base64("123"));
             return View();
         }
 
@@ -29,7 +31,7 @@ namespace Aosch.MES.Web.Controllers
             }
             //new MailSender().SendMail();
 
-            var account = new AccountService().Login(userName, userPwd);
+            var account = new AccountService().Login(userName, EncryptUtil.Base64(userPwd));
             if (account == null)
             {
                 //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"),LogType.Warning, $"用户名:{userName}的用户登录失败!原因：用户名密码不正确！\n");
