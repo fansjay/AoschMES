@@ -23,6 +23,7 @@ namespace Aosch.MES.Web.Controllers
         // GET: System
         public ActionResult Index()
         {
+            logger.Info($"用户【{CookieHelper.GetCurrentAccount().Username}】:登入主系统！");
             return View();
         }
 
@@ -103,7 +104,7 @@ namespace Aosch.MES.Web.Controllers
             {
                 var emp = employeeService.LoadEntities(a => a.EmployeeName == account.Username).FirstOrDefault();
                 var role = roleService.LoadEntities(a => a.ID == account.RoleID).FirstOrDefault();
-                logger.Warn($"用户{CookieHelper.GetCurrentAccount().Username}-> 添加系统帐号为{account.Username},姓名为{emp.NickName} 角色为{role.RoleName}，的{employeeService.GetDepartment(emp.DepartmentID).DepartmentName} 的系统帐号！\n");
+                logger.Warn($"用户【{CookieHelper.GetCurrentAccount().Username}】 添加系统帐号为{account.Username},姓名为{emp.NickName} 角色为{role.RoleName}，的{employeeService.GetDepartment(emp.DepartmentID).DepartmentName} 的系统帐号！\n");
                 return Json(new { Status = "OK" });
             }
          
@@ -118,6 +119,7 @@ namespace Aosch.MES.Web.Controllers
             {
                 if (accountService.DeleteEntityByID(ID))
                 {
+                    logger.Info($"用户{CookieHelper.GetCurrentAccount().Username}：删除了ID为{ID}的系统登录帐户！");
                     return Json(new { Status = "OK" });
                 }
                 else
@@ -138,6 +140,7 @@ namespace Aosch.MES.Web.Controllers
             {
                 if (accountService.UpdateEntity(AccountModel))
                 {
+                    logger.Info($"用户{CookieHelper.GetCurrentAccount().Username}：更新了{AccountModel.Username}的个人信息！");
                     return Json(new { Status = "OK" });
                 }
                 else
@@ -162,7 +165,7 @@ namespace Aosch.MES.Web.Controllers
             var ResultRole = roleService.AddEntity(AddRole);
             if (ResultRole != null)
             {
-                logger.Info($"用户{CookieHelper.GetCurrentAccount().Username}：成功添加了角色ID为{AddRole.ID},角色名为:{AddRole.RoleLevel}的角色！");
+                logger.Info($"用户【{CookieHelper.GetCurrentAccount().Username}】：成功添加了角色ID为{AddRole.ID},角色名为:{AddRole.RoleLevel}的角色！");
                 return Json(new { Status = "OK", RoleModel = AddRole });
             }
             return Json(new { Status = "ERROR" });
@@ -176,7 +179,7 @@ namespace Aosch.MES.Web.Controllers
             {
                 if (roleService.UpdateEntity(RoleModel))
                 {
-                    logger.Info($"用户{CookieHelper.GetCurrentAccount().Username}：修改了角色ID为{RoleModel.ID},角色名为:{RoleModel.RoleLevel}的角色！");
+                    logger.Info($"用户【{CookieHelper.GetCurrentAccount().Username}】：修改了角色ID为{RoleModel.ID},角色名为:{RoleModel.RoleLevel}的角色！");
                     return Json(new { Status = "OK" });
                 }
             }
@@ -193,7 +196,7 @@ namespace Aosch.MES.Web.Controllers
                 if (roleService.DeleteEntity(role))
                 {
                     //LoggerHelper.Log(Server.MapPath($"/Log/{DateTime.Now.ToString("yyyyMMdd")}.log"), LogType.Warning, $"用户 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
-                    logger.Warn($"用户 {CookieHelper.GetCurrentAccount().Username} 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
+                    logger.Warn($"用户 【{CookieHelper.GetCurrentAccount().Username}】 删除角色ID为{role.ID}角色名称为{role.RoleName}角色等级为{role.RoleLevel}的角色！\n");
                     return Json(new { Status = "OK" });
                 }
             }
@@ -252,7 +255,11 @@ namespace Aosch.MES.Web.Controllers
                     }
                 }
             }
-            if (InsertedCount == InsertCount) { return Json(new { Status = "OK" }); }
+            if (InsertedCount == InsertCount)
+            {
+                logger.Warn($"用户 【{CookieHelper.GetCurrentAccount().Username}】给角色ID为{RoleID}的角色分配了权限");
+                return Json(new { Status = "OK" });
+            }
             return Json(new { Status = "ERROR", ErrorMessage = $"计划添加权限{InsertCount}个，实际添加{InsertedCount}个" });
         }
 
@@ -348,7 +355,7 @@ namespace Aosch.MES.Web.Controllers
                 PositionList.Add(new SelectListItem() {Text=item.PositionName,Value=item.ID.ToString() });
             }
             ViewBag.PositionsList = PositionList;
-
+            logger.Warn($"用户 【{CookieHelper.GetCurrentAccount().Username}】查看了员工列表！");
             return View();
         }
 
@@ -395,6 +402,7 @@ namespace Aosch.MES.Web.Controllers
             employee.FireDate = DateTime.Parse("1900-01-01");
             if (employeeService.AddEntity(employee) != null)
             {
+                logger.Info($"用户 【{CookieHelper.GetCurrentAccount().Username}】 添加一个员工,姓名为：{employee.NickName};");
                 return Json(new { Status = "OK", Message = "" });
             }
             return Json(new { Status = "Error",Message="" });
@@ -415,6 +423,7 @@ namespace Aosch.MES.Web.Controllers
             EmployeeModel.FireDate = DateTime.Parse("1900-01-01");
             if (employeeService.UpdateEntity(EmployeeModel))
             {
+                logger.Warn($"用户 【{CookieHelper.GetCurrentAccount().Username}】修改了员工{EmployeeModel.NickName}的信息！");
                 return Json(new { Status = "OK", Message = "" });
             }
             return Json(new { Status = "Error", Message = "" });
@@ -428,6 +437,7 @@ namespace Aosch.MES.Web.Controllers
             {
                 if (employeeService.DeleteEmployeeByID(ID))
                 {
+                    logger.Warn($"用户 【{CookieHelper.GetCurrentAccount().Username}】 删除员工ID为{ID}的员工！");
                     return Json(new { Status = "OK", Message = "" });
                 }
             }
@@ -488,7 +498,9 @@ namespace Aosch.MES.Web.Controllers
                     break;
             }
             string FilePath = Server.MapPath("~/Download/" + FileName + FileExtention);
+            logger.Warn($"用户 【{CookieHelper.GetCurrentAccount().Username}】下载了文件名为{FileName}类型为{FileType}的文件！");
             return File(FilePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{DateTime.Now.Ticks}{FileName}{FileExtention}");
+           
         }
         #endregion
 

@@ -146,7 +146,6 @@
     <Compile Include="App_Start\HandlerPermissionAttribute.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ApplicationHandleErrorAttribute.cs" />
-    <Compile Include="Controllers\CNCController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LoginFilterAcctribute.cs" />

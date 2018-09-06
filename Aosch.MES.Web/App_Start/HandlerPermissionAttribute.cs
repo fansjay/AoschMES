@@ -36,7 +36,6 @@ namespace Aosch.MES.Web.App_Start
                 //sbScript.Append("<script type='text/javascript'>alert('很抱歉！您的权限不足，访问被拒绝！');</script>");
                 //filterContext.Result = new ContentResult() { Content = sbScript.ToString() };
                 //filterContext.Result = new JavaScriptResult() {Script= "alert('很抱歉！您的权限不足，访问被拒绝！')" }; 
-
                 filterContext.Result = new JsonResult() { Data = new { Status = "Error", Message = "权限不足,访问被拒绝!" } };
                 return;
             }

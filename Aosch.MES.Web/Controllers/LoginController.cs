@@ -14,8 +14,7 @@ namespace Aosch.MES.Web.Controllers
         log4net.ILog logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         // GET: Login
         public ActionResult Index()
-        {
-            logger.Info(EncryptUtil.Base64("123"));
+        {            
             return View();
         }
 
@@ -56,7 +55,6 @@ namespace Aosch.MES.Web.Controllers
 
                 //设置cookie保存时间
                 CurrentAccountCookie.Expires = DateTime.Now.AddDays(2);
-
                 return Json(new {LoginAccount=account,Status="OK"});
             }
             

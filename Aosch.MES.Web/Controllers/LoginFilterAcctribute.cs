@@ -8,8 +8,6 @@ namespace Aosch.MES.Web.Controllers
 {
     public class LoginFilterAcctribute: AuthorizeAttribute
     {
-     
-      
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             filterContext.HttpContext.Response.Redirect("/Login/Index");
